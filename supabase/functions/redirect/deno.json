@@ -1,0 +1,9 @@
+{
+    "imports": {
+        "supabase": "https://esm.sh/@supabase/supabase-js@2",
+        "ua-parser": "https://esm.sh/ua-parser-js@1.0.37"
+    },
+    "tasks": {
+        "dev": "deno run --allow-net --allow-env --watch index.ts"
+    }
+}
