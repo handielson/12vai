@@ -19,6 +19,7 @@ export interface Url {
   is_premium: boolean;
   active: boolean;
   created_at: string;
+  qr_config?: QRConfig | null; // Configuração do QR Code
 }
 
 export interface DashboardStats {
@@ -53,4 +54,16 @@ export interface TopUrlData {
   shortCode: string;
   originalUrl: string;
   clicks: number;
+}
+
+// QR Code Customization Types
+export interface QRConfig {
+  foregroundColor: string;  // Cor do QR Code
+  backgroundColor: string;  // Cor de fundo
+  logoUrl?: string;         // URL da logo (opcional)
+  logoSize?: number;        // Tamanho da logo (0.1 - 0.4)
+  dotsStyle: 'dots' | 'rounded' | 'classy' | 'square';
+  cornersStyle: 'dot' | 'square' | 'extra-rounded';
+  margin: number;           // Margem (0 - 50)
+  size: number;             // Tamanho (200 - 1000)
 }
