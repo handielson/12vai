@@ -670,6 +670,14 @@ const AdminDashboard: React.FC = () => {
                             <p className="text-sm font-bold text-red-900 mt-2">
                                 {userToDelete.email}
                             </p>
+                            <div className="mt-3 pt-3 border-t border-red-200">
+                                <p className="text-sm text-red-800">
+                                    📊 <strong>URLs criadas:</strong> {userToDelete.url_count || 0}
+                                </p>
+                                <p className="text-sm text-red-800">
+                                    👆 <strong>Cliques totais:</strong> {userToDelete.total_clicks || 0}
+                                </p>
+                            </div>
                         </div>
 
                         {/* Opção de URLs */}
@@ -687,8 +695,8 @@ const AdminDashboard: React.FC = () => {
                                         className="mt-0.5"
                                     />
                                     <div>
-                                        <div className="font-medium text-slate-900">Manter URLs ativas</div>
-                                        <div className="text-xs text-slate-500">Os links continuarão funcionando (recomendado)</div>
+                                        <div className="font-medium text-slate-900">✅ Manter URLs ativas</div>
+                                        <div className="text-xs text-slate-500">Os {userToDelete.url_count || 0} links continuarão funcionando normalmente (recomendado)</div>
                                     </div>
                                 </label>
                                 <label className="flex items-start gap-3 p-3 border-2 border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors">
@@ -700,8 +708,8 @@ const AdminDashboard: React.FC = () => {
                                         className="mt-0.5"
                                     />
                                     <div>
-                                        <div className="font-medium text-slate-900">Excluir todas as URLs</div>
-                                        <div className="text-xs text-slate-500">Os links pararão de funcionar</div>
+                                        <div className="font-medium text-slate-900">❌ Excluir todas as URLs</div>
+                                        <div className="text-xs text-slate-500">Os {userToDelete.url_count || 0} links pararão de funcionar permanentemente</div>
                                     </div>
                                 </label>
                             </div>
