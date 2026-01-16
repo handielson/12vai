@@ -11,12 +11,15 @@ import {
   ExternalLink,
   QrCode,
   Download,
-  X
+  X,
+  Palette
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Url } from '../types';
 import { urlService } from '../services/urlService';
 import { useAuth } from '../contexts/AuthContext';
+import QRCustomizer from './QRCustomizer';
+import type { QRConfig } from '../types';
 
 const UrlList: React.FC = () => {
   const { supabaseUser } = useAuth();
@@ -34,6 +37,10 @@ const UrlList: React.FC = () => {
     url: null
   });
   const [analyticsModal, setAnalyticsModal] = useState<{ show: boolean; url: Url | null }>({
+    show: false,
+    url: null
+  });
+  const [qrCustomizerModal, setQrCustomizerModal] = useState<{ show: boolean; url: Url | null }>({
     show: false,
     url: null
   });
@@ -220,6 +227,13 @@ const UrlList: React.FC = () => {
                           title="QR Code"
                         >
                           <QrCode size={18} />
+                        </button>
+                        <button
+                          onClick={() => setQrCustomizerModal({ show: true, url })}
+                          className="p-2.5 text-slate-400 hover:text-purple-600 hover:bg-white border border-transparent hover:border-purple-100 rounded-xl transition-all shadow-sm"
+                          title="Personalizar QR"
+                        >
+                          <Palette size={18} />
                         </button>
                         <button
                           onClick={() => setAnalyticsModal({ show: true, url })}
