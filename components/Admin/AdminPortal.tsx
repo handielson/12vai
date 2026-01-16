@@ -8,9 +8,10 @@ import AdminDashboard from './AdminDashboard';
 import { PlanSettingsPanel } from './PlanSettingsPanel';
 import { DocumentationPanel } from './DocumentationPanel';
 import { AuditLogPanel } from './AuditLogPanel';
+import AnalyticsPanel from './AnalyticsPanel';
 
 
-type TabType = 'dashboard' | 'users' | 'maintenance' | 'plans' | 'audit' | 'docs';
+type TabType = 'dashboard' | 'users' | 'maintenance' | 'plans' | 'audit' | 'docs' | 'analytics';
 
 const AdminPortal: React.FC = () => {
     const { user, signOut } = useAuth();
@@ -113,6 +114,7 @@ const AdminPortal: React.FC = () => {
     const tabs = [
         { id: 'dashboard' as TabType, label: 'Dashboard', icon: BarChart3 },
         { id: 'users' as TabType, label: 'Usuários', icon: Users },
+        { id: 'analytics' as TabType, label: 'Analytics', icon: BarChart3 },
         { id: 'maintenance' as TabType, label: 'Manutenção', icon: Wrench },
         { id: 'plans' as TabType, label: 'Planos', icon: Settings },
         { id: 'audit' as TabType, label: 'Auditoria', icon: Clock },
@@ -272,6 +274,7 @@ const AdminPortal: React.FC = () => {
                 )}
 
                 {activeTab === 'users' && <AdminDashboard />}
+                {activeTab === 'analytics' && <AnalyticsPanel />}
                 {activeTab === 'plans' && <PlanSettingsPanel />}
                 {activeTab === 'audit' && <AuditLogPanel />}
                 {activeTab === 'docs' && <DocumentationPanel />}

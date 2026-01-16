@@ -35,3 +35,22 @@ export interface ApiResponse<T> {
   error?: string;
   status: number;
 }
+
+// Analytics Types
+export interface GeneralStats {
+  totalUrls: number;
+  totalClicks: number;
+  totalUsers: number;
+  avgClicksPerUrl: number;
+}
+
+export interface TimeSeriesData {
+  date: string;
+  count: number;
+}
+
+export interface TopUrlData {
+  shortCode: string;
+  originalUrl: string;
+  clicks: number;
+}
