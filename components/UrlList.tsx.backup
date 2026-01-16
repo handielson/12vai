@@ -472,25 +472,6 @@ const UrlList: React.FC = () => {
           </div>
         </div>
       )}
-
-      {/* Modal de Personalização de QR Code */}
-      {qrCustomizerModal.show && qrCustomizerModal.url && (
-        <QRCustomizer
-          url={`https://12vai.com/${qrCustomizerModal.url.short_slug}`}
-          initialConfig={qrCustomizerModal.url.qr_config || undefined}
-          onSave={async (config) => {
-            try {
-              await urlService.updateQRConfig(qrCustomizerModal.url!.id, config);
-              fetchUrls();
-              alert('✅ Configuração de QR Code salva com sucesso!');
-            } catch (error) {
-              console.error('Erro ao salvar configuração:', error);
-              alert('❌ Erro ao salvar configuração. Tente novamente.');
-            }
-          }}
-          onClose={() => setQrCustomizerModal({ show: false, url: null })}
-        />
-      )}
     </div>
   );
 };
