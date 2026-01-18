@@ -4,33 +4,75 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
 ## [1.5.0] - 2026-01-18
 
-### ✨ Adicionado
-- **Sistema Completo de Cupons e Promoções**
-  - Criação e gerenciamento de cupons de desconto
-  - Suporte para desconto percentual, valor fixo e extensão de trial
-  - Configuração flexível de aplicabilidade (upgrade, renovação ou ambos)
-  - Limites de uso total e por usuário
-  - Restrição a planos específicos
-  - Dashboard de estatísticas em tempo real
-  - Interface admin completa para gerenciamento
-  - Campo de cupom no checkout com validação em tempo real
+### 🎫 Sistema de Cupons e Promoções
 
-### 🗄️ Database
-- Tabela `coupons` para armazenar cupons
-- Tabela `coupon_usage` para histórico de uso
-- Funções PostgreSQL: `validate_coupon`, `apply_coupon`, `calculate_discount`, `get_coupon_stats`
+#### Adicionado
+- Sistema completo de cupons com tipos: percentual, valor fixo e extensão de trial
+- Interface admin para criação e gerenciamento de cupons
+- Campo de cupom no checkout com validação em tempo real
+- Estatísticas de uso de cupons no painel admin
+- Limites configuráveis: total de usos e por usuário
+- Restrição de cupons por plano específico
+- Aplicabilidade: upgrade, renovação ou ambos
+
+#### Database
+- Tabela `coupons` com todos os campos necessários
+- Tabela `coupon_usage` para rastreamento
+- Funções SQL: `validate_coupon`, `apply_coupon`, `calculate_discount`, `get_coupon_stats`
 - RLS policies completas para segurança
-- ENUM types para tipagem forte
 
-### 💻 Componentes
-- `CouponManagement.tsx` - Interface admin de gerenciamento
-- `CouponField.tsx` - Campo de cupom para checkout
-- `couponService.ts` - Serviço de integração com backend
+#### Frontend
+- Componente `CouponManagement.tsx` para admin
+- Componente `CouponField.tsx` para checkout
+- Integração na aba "Cupons" do AdminPortal
 
-### 🔒 Segurança
-- Correção de `search_path` em funções do banco de dados
-- Otimização de políticas RLS
-- Validação de `user_id` em inserções
+### 📜 Sistema de Aceite de Termos
+
+#### Adicionado
+- Sistema completo de termos editáveis pelo admin
+- Modal de aceite obrigatório para usuários
+- Controle de versão automático de documentos
+- Editor Markdown integrado no painel admin
+- Registro de aceites com IP e timestamp
+- Termos de Uso completos (13 seções, ~8.500 caracteres)
+- Política de Privacidade completa (13 seções, ~10.000 caracteres)
+- Conformidade total com LGPD (Lei 13.709/2018)
+
+#### Database
+- Tabela `legal_documents` para armazenar termos editáveis
+- Tabela `user_acceptances` para registro de aceites
+- Funções SQL: `get_active_documents`, `check_user_acceptance`, `record_acceptance`, `publish_new_version`
+- RLS policies para controle de acesso
+
+#### Frontend
+- Componente `TermsAcceptanceModal.tsx` para usuários
+- Componente `LegalDocumentsPanel.tsx` editável para admin
+- Integração automática no App.tsx
+- Verificação de aceite no login
+
+#### Backend
+- Serviço `termsService.ts` com CRUD completo
+- Verificação automática de aceite
+- Registro com IP e User-Agent para auditoria
+
+#### Legal
+- Termos de Uso conformes com CDC e Marco Civil
+- Política de Privacidade conforme LGPD
+- Todos os direitos do titular implementados (Art. 18 LGPD)
+- Base legal documentada para cada tratamento
+- Informações sobre DPO e ANPD
+
+### 🔧 Melhorias Gerais
+- Versão do app atualizada para 1.5.0
+- Copyright atualizado para 2026
+- Versão visível no rodapé (admin e usuário)
+- Cache busting via atualização de versão
+
+### 📚 Documentação
+- README.md atualizado com novos sistemas
+- CHANGELOG.md completo criado
+- Guias de implementação e troubleshooting
+- Scripts de verificação SQL de `user_id` em inserções
 
 ### 🎨 UI/UX
 - Versão v1.5.0 visível em todos os rodapés

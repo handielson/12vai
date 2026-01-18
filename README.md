@@ -82,6 +82,17 @@ VaiEncurta é um encurtador de URLs SaaS desenvolvido com React 19 e Supabase, f
 - [x] **Estatísticas** - Dashboard com métricas de uso
 - [x] **Gerenciamento** - Ativar/desativar cupons dinamicamente
 
+### 📜 Sistema de Aceite de Termos (v1.5.0)
+
+- [x] **Termos Editáveis** - Admin pode editar Termos de Uso e Política de Privacidade
+- [x] **Controle de Versão** - Sistema de versionamento automático
+- [x] **Modal de Aceite** - Usuários devem aceitar termos ao se registrar
+- [x] **Reaceite Automático** - Modal reaparece quando termos são atualizados
+- [x] **Registro de Aceites** - Histórico completo com IP e timestamp
+- [x] **Conformidade LGPD** - Termos completos em conformidade com lei brasileira
+- [x] **Editor Markdown** - Interface admin para edição de documentos
+- [x] **Auditoria** - Rastreamento completo de aceites por usuário
+
 ### 🔧 Modo de Manutenção
 
 - [x] **Toggle Admin** - Botão no painel administrativo para ativar/desativar
@@ -141,6 +152,9 @@ Execute os scripts SQL na ordem:
 2. [`db/final_setup.sql`](db/final_setup.sql) - Cria usuários de teste
 3. [`db/migrations/001_create_coupons.sql`](db/migrations/001_create_coupons.sql) - Sistema de cupons
 4. [`db/migrations/002_fix_coupon_security.sql`](db/migrations/002_fix_coupon_security.sql) - Correções de segurança
+5. [`db/migrations/003_create_legal_system.sql`](db/migrations/003_create_legal_system.sql) - Sistema de termos
+6. [`db/migrations/004_update_terms_content.sql`](db/migrations/004_update_terms_content.sql) - Termos de Uso completos
+7. [`db/migrations/005_update_privacy_content.sql`](db/migrations/005_update_privacy_content.sql) - Política de Privacidade
 
 ### 4. Rodar Localmente
 
@@ -269,12 +283,16 @@ graph LR
 
 Veja o [CHANGELOG.md](CHANGELOG.md) completo para detalhes de todas as versões.
 
-### v1.5.0 (18/01/2026) - Sistema de Cupons
+### v1.5.0 (18/01/2026) - Sistema de Cupons e Termos
 
 - ✅ **Sistema completo de cupons e promoções**
+- ✅ **Sistema de aceite de termos editáveis**
 - ✅ **Interface admin de gerenciamento**
 - ✅ **Validação em tempo real no checkout**
 - ✅ **Estatísticas de uso**
+- ✅ **Termos juridicamente conformes (LGPD)**
+- ✅ **Modal de aceite para usuários**
+- ✅ **Controle de versão de documentos**
 - ✅ **Versão visível na UI**
 
 ### v2.0.0 (15/01/2026) - Produção
