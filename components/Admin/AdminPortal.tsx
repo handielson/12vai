@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, LogOut, Copy, Check, Users, Wrench, Settings, FileText, Clock, BarChart3, ExternalLink, Zap, Tag, Scale, Key } from 'lucide-react';
+import { Shield, LogOut, Copy, Check, Users, Wrench, Settings, FileText, Clock, BarChart3, ExternalLink, Zap, Tag, Scale, Key, Mail } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { adminService } from '../../services/adminService';
 import { AdminLogin } from './AdminLogin';
@@ -12,9 +12,10 @@ import { AuditLogPanel } from './AuditLogPanel';
 import AnalyticsPanel from './AnalyticsPanel';
 import CouponManagement from './CouponManagement';
 import { ApiKeysPanel } from './ApiKeysPanel';
+import { EmailTestPanel } from './EmailTestPanel';
 
 
-type TabType = 'dashboard' | 'users' | 'maintenance' | 'plans' | 'audit' | 'docs' | 'analytics' | 'coupons' | 'terms' | 'api';
+type TabType = 'dashboard' | 'users' | 'maintenance' | 'plans' | 'audit' | 'docs' | 'analytics' | 'coupons' | 'terms' | 'api' | 'email';
 
 const AdminPortal: React.FC = () => {
     const { user, signOut } = useAuth();
@@ -120,6 +121,7 @@ const AdminPortal: React.FC = () => {
         { id: 'analytics' as TabType, label: 'Analytics', icon: BarChart3 },
         { id: 'coupons' as TabType, label: 'Cupons', icon: Tag },
         { id: 'api' as TabType, label: 'API', icon: Key },
+        { id: 'email' as TabType, label: 'Email', icon: Mail },
         { id: 'maintenance' as TabType, label: 'Manutenção', icon: Wrench },
         { id: 'plans' as TabType, label: 'Planos', icon: Settings },
         { id: 'audit' as TabType, label: 'Auditoria', icon: Clock },
@@ -271,40 +273,34 @@ const AdminPortal: React.FC = () => {
                             <ul className="space-y-2 text-sm text-slate-600">
                                 <li>• <strong>Usuários</strong>: Gerencie planos, limites e impersone usuários</li>
                                 <li>• <strong>Manutenção</strong>: Ative/desative o modo de manutenção do site</li>
-                                <li>• <strong>Planos</strong>: Configure limites e preços dos planos</li>
-                                <li>• <strong>Auditoria</strong>: Visualize logs de todas as ações administrativas</li>
-                                <li>• <strong>Documentação</strong>: Acesse guias e referências do sistema</li>
-                            </ul>
+                                {activeTab === 'dashboard' && <AdminDashboard />}
+                                {activeTab === 'users' && <div className="text-slate-500">Painel de Usuários em desenvolvimento...</div>}
+                                {activeTab === 'analytics' && <AnalyticsPanel />}
+                                {activeTab === 'coupons' && <CouponManagement />}
+                                {activeTab === 'api' && <ApiKeysPanel />}
+                                {activeTab === 'email' && <EmailTestPanel />}
+                                {activeTab === 'maintenance' && <MaintenanceControl />}
+                                {activeTab === 'plans' && <PlanSettingsPanel />}
+                                {activeTab === 'audit' && <AuditLogPanel />}
+                                {activeTab === 'docs' && <DocumentationPanel />}
+                                {activeTab === 'terms' && <LegalDocumentsPanel />}
+                            </main>
+
+                            {/* Footer com versão */}
+                            <footer className="border-t border-slate-200 bg-white py-4 mt-8">
+                                <div className="max-w-7xl mx-auto px-6 flex items-center justify-between text-sm text-slate-500">
+                                    <div>
+                                        © 2026 VaiEncurta. Todos os direitos reservados.
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="px-2 py-1 bg-slate-100 rounded text-xs font-mono">
+                                            v1.6.0
+                                        </span>
+                                    </div>
+                                </div>
+                            </footer>
                         </div>
-                    </div>
-                )}
-
-                {activeTab === 'users' && <div className="text-slate-500">Painel de Usuários em desenvolvimento...</div>}
-                {activeTab === 'analytics' && <AnalyticsPanel />}
-                {activeTab === 'coupons' && <CouponManagement />}
-                {activeTab === 'api' && <ApiKeysPanel />}
-                {activeTab === 'plans' && <PlanSettingsPanel />}
-                {activeTab === 'audit' && <AuditLogPanel />}
-                {activeTab === 'docs' && <DocumentationPanel />}
-                {activeTab === 'terms' && <LegalDocumentsPanel />}
-                {activeTab === 'maintenance' && <MaintenanceControl />}
-            </main>
-
-            {/* Footer com versão */}
-            <footer className="border-t border-slate-200 bg-white py-4 mt-8">
-                <div className="max-w-7xl mx-auto px-6 flex items-center justify-between text-sm text-slate-500">
-                    <div>
-                        © 2026 VaiEncurta. Todos os direitos reservados.
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className="px-2 py-1 bg-slate-100 rounded text-xs font-mono">
-                            v1.6.0
-                        </span>
-                    </div>
-                </div>
-            </footer>
-        </div>
-    );
+                        );
 };
 
-export default AdminPortal;
+                        export default AdminPortal;
