@@ -118,6 +118,15 @@ class EmailService {
      */
     async sendWelcomeEmail(userEmail: string, userName: string, userId: string): Promise<boolean> {
         try {
+            // Verificar se está em produção
+            const isProduction = window.location.hostname !== 'localhost';
+
+            if (!isProduction) {
+                alert('📧 Sistema de email funciona apenas em produção!\n\nPara testar:\n1. Aguarde deploy na Vercel\n2. Acesse o site em produção\n3. Teste o envio de email');
+                console.log('⚠️ Email system only works in production (Vercel)');
+                return false;
+            }
+
             // Verificar preferências
             const canSend = await this.canSend(userId, 'welcome');
             if (!canSend) {
