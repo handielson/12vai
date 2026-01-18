@@ -89,6 +89,24 @@ const App: React.FC = () => {
     }
   };
 
+  // Verificar se usuário precisa aceitar termos
+  useEffect(() => {
+    const checkTermsAcceptance = async () => {
+      if (!user) return;
+
+      try {
+        const status = await termsService.checkUserAcceptance(user.id);
+        setShowTermsModal(status.needs_acceptance);
+      } catch (error) {
+        console.error('Erro ao verificar aceite de termos:', error);
+      }
+    };
+
+    if (user) {
+      checkTermsAcceptance();
+    }
+  }, [user]);
+
   // ============================================
   // VERIFICAÇÃO DE ROTA ADMIN (PRIMEIRA PRIORIDADE)
   // Deve acontecer ANTES de qualquer outra verificação
