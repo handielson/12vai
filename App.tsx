@@ -15,8 +15,10 @@ import RegisterForm from './components/Auth/RegisterForm';
 import ForgotPassword from './components/Auth/ForgotPassword';
 import RedirectHandler from './components/RedirectHandler';
 import { WhatsNewModal } from './components/WhatsNewModal';
+import { TermsAcceptanceModal } from './components/TermsAcceptanceModal';
 import MaintenancePage from './components/MaintenancePage';
 import { useAuth } from './contexts/AuthContext';
+import { termsService } from './services/termsService';
 import { Zap, Sparkles } from 'lucide-react';
 import { supabase } from './lib/supabase';
 
@@ -28,6 +30,7 @@ const App: React.FC = () => {
   const [maintenanceMode, setMaintenanceMode] = useState(false);
   const [checkingMaintenance, setCheckingMaintenance] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
 
   // Atualizar título da página dinamicamente
   useEffect(() => {
@@ -258,6 +261,14 @@ const App: React.FC = () => {
 
       {/* Modal de atualizações */}
       <WhatsNewModal />
+
+      {/* Modal de aceite de termos */}
+      {showTermsModal && user && (
+        <TermsAcceptanceModal
+          userId={user.id}
+          onAccepted={() => setShowTermsModal(false)}
+        />
+      )}
     </Layout>
   );
 };
