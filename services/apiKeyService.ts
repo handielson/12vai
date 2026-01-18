@@ -1,5 +1,4 @@
 import { supabase } from '../lib/supabase';
-import { createHash, randomBytes } from 'crypto';
 
 export interface ApiKey {
     id: string;
@@ -46,18 +45,38 @@ export interface RateLimitInfo {
 
 class ApiKeyService {
     /**
+     * Gerar bytes aleatórios usando Web Crypto API
+     */
+    private generateRandomBytes(length: number): string {
+        const array = new Uint8Array(length);
+        window.crypto.getRandomValues(array);
+        return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    }
+
+    /**
+     * Hash SHA-256 usando Web Crypto API
+     */
+    private async hashString(str: string): Promise<string> {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(str);
+        const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    /**
      * Gerar nova API key
      */
     generateApiKey(environment: 'live' | 'test' = 'live'): string {
-        const randomPart = randomBytes(16).toString('hex');
+        const randomPart = this.generateRandomBytes(16);
         return `vai_${environment}_${randomPart}`;
     }
 
     /**
      * Hash da API key para armazenamento seguro
      */
-    hashApiKey(apiKey: string): string {
-        return createHash('sha256').update(apiKey).digest('hex');
+    async hashApiKey(apiKey: string): Promise<string> {
+        return await this.hashString(apiKey);
     }
 
     /**
@@ -72,7 +91,7 @@ class ApiKeyService {
         try {
             // Gerar chave
             const plainKey = this.generateApiKey(environment);
-            const keyHash = this.hashApiKey(plainKey);
+            const keyHash = await this.hashApiKey(plainKey);
             const prefix = `vai_${environment}_`;
 
             // Inserir no banco
@@ -168,7 +187,7 @@ class ApiKeyService {
         planType?: string;
     }> {
         try {
-            const keyHash = this.hashApiKey(plainKey);
+            const keyHash = await this.hashApiKey(plainKey);
 
             const { data, error } = await supabase.rpc('validate_api_key', {
                 p_key_hash: keyHash
