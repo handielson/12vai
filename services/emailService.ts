@@ -127,28 +127,35 @@ class EmailService {
 
             const subject = `Bem-vindo ao VaiEncurta, ${userName}! 🎉`;
 
-            console.log('📧 Enviando email via Resend...');
-            console.log('From:', EMAIL_CONFIG.from);
+            console.log('📧 Enviando email via API...');
             console.log('To:', userEmail);
             console.log('Subject:', subject);
 
-            // Enviar via Resend
-            const { data, error } = await resend.emails.send({
-                from: EMAIL_CONFIG.from,
-                to: userEmail,
-                subject,
-                html: this.getWelcomeEmailHTML(userName)
+            // Enviar via API endpoint (serverless function)
+            const response = await fetch('/api/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    to: userEmail,
+                    subject,
+                    html: this.getWelcomeEmailHTML(userName),
+                    type: 'welcome'
+                })
             });
 
-            if (error) {
-                console.error('❌ Erro do Resend:', error);
-                throw error;
+            const result = await response.json();
+
+            if (!response.ok) {
+                console.error('❌ Erro da API:', result.error);
+                throw new Error(result.error || 'Falha ao enviar email');
             }
 
-            console.log('✅ Email enviado! ID:', data?.id);
+            console.log('✅ Email enviado! ID:', result.id);
 
             // Registrar no banco
-            await this.logEmail(userId, 'welcome', userEmail, subject, data?.id);
+            await this.logEmail(userId, 'welcome', userEmail, subject, result.id);
 
             return true;
         } catch (error) {
