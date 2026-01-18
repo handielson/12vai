@@ -227,7 +227,12 @@ const App: React.FC = () => {
         )}
 
         <footer className="p-10 border-t border-slate-200 text-center text-slate-400 font-medium">
-          &copy; 2024 VaiEncurta. Encurtador de URLs Brasileiro.
+          <div className="flex items-center justify-center gap-3">
+            <span>&copy; 2024 VaiEncurta. Encurtador de URLs Brasileiro.</span>
+            <span className="px-2 py-1 bg-slate-100 rounded text-xs font-mono text-slate-600">
+              v1.5.0
+            </span>
+          </div>
         </footer>
       </div>
     );

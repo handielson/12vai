@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, LogOut, Copy, Check, Users, Wrench, Settings, FileText, Clock, BarChart3, ExternalLink, Zap } from 'lucide-react';
+import { Shield, LogOut, Copy, Check, Users, Wrench, Settings, FileText, Clock, BarChart3, ExternalLink, Zap, Tag } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { adminService } from '../../services/adminService';
 import { AdminLogin } from './AdminLogin';
@@ -9,9 +9,10 @@ import { PlanSettingsPanel } from './PlanSettingsPanel';
 import { DocumentationPanel } from './DocumentationPanel';
 import { AuditLogPanel } from './AuditLogPanel';
 import AnalyticsPanel from './AnalyticsPanel';
+import CouponManagement from './CouponManagement';
 
 
-type TabType = 'dashboard' | 'users' | 'maintenance' | 'plans' | 'audit' | 'docs' | 'analytics';
+type TabType = 'dashboard' | 'users' | 'maintenance' | 'plans' | 'audit' | 'docs' | 'analytics' | 'coupons';
 
 const AdminPortal: React.FC = () => {
     const { user, signOut } = useAuth();
@@ -115,6 +116,7 @@ const AdminPortal: React.FC = () => {
         { id: 'dashboard' as TabType, label: 'Dashboard', icon: BarChart3 },
         { id: 'users' as TabType, label: 'Usuários', icon: Users },
         { id: 'analytics' as TabType, label: 'Analytics', icon: BarChart3 },
+        { id: 'coupons' as TabType, label: 'Cupons', icon: Tag },
         { id: 'maintenance' as TabType, label: 'Manutenção', icon: Wrench },
         { id: 'plans' as TabType, label: 'Planos', icon: Settings },
         { id: 'audit' as TabType, label: 'Auditoria', icon: Clock },
@@ -275,11 +277,26 @@ const AdminPortal: React.FC = () => {
 
                 {activeTab === 'users' && <AdminDashboard />}
                 {activeTab === 'analytics' && <AnalyticsPanel />}
+                {activeTab === 'coupons' && <CouponManagement />}
                 {activeTab === 'plans' && <PlanSettingsPanel />}
                 {activeTab === 'audit' && <AuditLogPanel />}
                 {activeTab === 'docs' && <DocumentationPanel />}
                 {activeTab === 'maintenance' && <MaintenanceControl />}
             </main>
+
+            {/* Footer com versão */}
+            <footer className="border-t border-slate-200 bg-white py-4 mt-8">
+                <div className="max-w-7xl mx-auto px-6 flex items-center justify-between text-sm text-slate-500">
+                    <div>
+                        © 2024 VaiEncurta. Todos os direitos reservados.
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <span className="px-2 py-1 bg-slate-100 rounded text-xs font-mono">
+                            v1.5.0
+                        </span>
+                    </div>
+                </div>
+            </footer>
         </div>
     );
 };

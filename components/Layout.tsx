@@ -162,6 +162,9 @@ const Layout: React.FC<LayoutProps> = ({
           <LogOut size={18} />
           Sair do Painel
         </button>
+        <div className="mt-2 text-center text-xs text-slate-600">
+          <span className="px-2 py-1 bg-slate-800 rounded font-mono">v1.5.0</span>
+        </div>
       </div>
     </div>
   );
