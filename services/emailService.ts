@@ -120,9 +120,17 @@ class EmailService {
         try {
             // Verificar preferências
             const canSend = await this.canSend(userId, 'welcome');
-            if (!canSend) return false;
+            if (!canSend) {
+                console.log('❌ Usuário não permite receber emails de boas-vindas');
+                return false;
+            }
 
             const subject = `Bem-vindo ao VaiEncurta, ${userName}! 🎉`;
+
+            console.log('📧 Enviando email via Resend...');
+            console.log('From:', EMAIL_CONFIG.from);
+            console.log('To:', userEmail);
+            console.log('Subject:', subject);
 
             // Enviar via Resend
             const { data, error } = await resend.emails.send({
@@ -132,14 +140,23 @@ class EmailService {
                 html: this.getWelcomeEmailHTML(userName)
             });
 
-            if (error) throw error;
+            if (error) {
+                console.error('❌ Erro do Resend:', error);
+                throw error;
+            }
+
+            console.log('✅ Email enviado! ID:', data?.id);
 
             // Registrar no banco
             await this.logEmail(userId, 'welcome', userEmail, subject, data?.id);
 
             return true;
         } catch (error) {
-            console.error('Erro ao enviar email de boas-vindas:', error);
+            console.error('❌ Erro ao enviar email de boas-vindas:', error);
+            // Mostrar erro detalhado
+            if (error instanceof Error) {
+                alert(`Erro: ${error.message}`);
+            }
             return false;
         }
     }
