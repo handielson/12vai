@@ -79,33 +79,33 @@ const UrlCreator: React.FC<Props> = ({ user, onCreated }) => {
   };
 
   return (
-    <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl shadow-indigo-500/5 mb-10">
+    <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-200 dark:border-slate-700 shadow-xl shadow-indigo-500/5 mb-10">
       <div className="flex items-center gap-3 mb-6">
         <div className="w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center">
           <Zap size={20} fill="currentColor" />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-slate-900">Novo Link de Conversão</h2>
-          <p className="text-sm text-slate-500">Seu cliente não pensa. Ele vai.</p>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Novo Link de Conversão</h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Seu cliente não pensa. Ele vai.</p>
         </div>
       </div>
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-1.5">Destino do Link (URL Longa)</label>
+          <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Destino do Link (URL Longa)</label>
           <input
             type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="Ex: https://wa.me/551199999..."
-            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-4 focus:ring-indigo-500/10 transition-all"
+            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:ring-4 focus:ring-indigo-500/10 transition-all"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-1.5">Sua URL Curta</label>
+          <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Sua URL Curta</label>
           <div className="flex items-center gap-2">
-            <div className="flex items-center px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-slate-500 font-bold select-none">
+            <div className="flex items-center px-4 py-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-500 dark:text-slate-400 font-bold select-none">
               12vai/
             </div>
             <div className="flex-1 relative">
@@ -114,7 +114,7 @@ const UrlCreator: React.FC<Props> = ({ user, onCreated }) => {
                 value={slug}
                 onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/\s/g, '-'))}
                 placeholder="slug-personalizado"
-                className={`w-full px-4 py-3 bg-white border ${validation && !validation.valid ? 'border-rose-300' : 'border-slate-200'} rounded-xl outline-none focus:ring-4 focus:ring-indigo-500/10 transition-all font-medium`}
+                className={`w-full px-4 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border ${validation && !validation.valid ? 'border-rose-300' : 'border-slate-200 dark:border-slate-700'} rounded-xl outline-none focus:ring-4 focus:ring-indigo-500/10 transition-all font-medium`}
               />
               {validation?.isPremium && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-0.5 bg-amber-100 text-amber-700 rounded-md text-[10px] font-black uppercase tracking-wider">
