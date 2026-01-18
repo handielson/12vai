@@ -104,17 +104,17 @@ $$;
 CREATE OR REPLACE FUNCTION check_user_acceptance(p_user_id UUID)
 RETURNS TABLE (
     needs_acceptance BOOLEAN,
-    pending_documents document_type[]
+    pending_documents TEXT[]
 )
 SECURITY DEFINER
 SET search_path = ''
 LANGUAGE plpgsql
 AS $$
 DECLARE
-    v_pending document_type[];
+    v_pending TEXT[];
 BEGIN
     -- Buscar documentos ativos que o usuário não aceitou
-    SELECT ARRAY_AGG(ld.type)
+    SELECT ARRAY_AGG(ld.type::TEXT)
     INTO v_pending
     FROM public.legal_documents ld
     WHERE ld.active = true
@@ -128,7 +128,7 @@ BEGIN
     
     RETURN QUERY SELECT 
         (v_pending IS NOT NULL AND array_length(v_pending, 1) > 0),
-        COALESCE(v_pending, ARRAY[]::document_type[]);
+        COALESCE(v_pending, ARRAY[]::TEXT[]);
 END;
 $$;
 
