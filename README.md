@@ -71,6 +71,17 @@ VaiEncurta é um encurtador de URLs SaaS desenvolvido com React 19 e Supabase, f
 - [x] **Loading States** - Feedback visual em todas as ações
 - [x] **Modais de Confirmação** - Previne ações acidentais
 
+### 🎫 Sistema de Cupons e Promoções (v1.5.0)
+
+- [x] **Criação de Cupons** - Interface admin completa
+- [x] **Tipos de Desconto** - Percentual, valor fixo ou extensão de trial
+- [x] **Aplicabilidade** - Upgrade, renovação ou ambos
+- [x] **Limites Flexíveis** - Total de usos e por usuário
+- [x] **Restrição de Planos** - Cupons específicos para cada plano
+- [x] **Validação em Tempo Real** - Campo de cupom no checkout
+- [x] **Estatísticas** - Dashboard com métricas de uso
+- [x] **Gerenciamento** - Ativar/desativar cupons dinamicamente
+
 ### 🔧 Modo de Manutenção
 
 - [x] **Toggle Admin** - Botão no painel administrativo para ativar/desativar
@@ -128,6 +139,8 @@ Execute os scripts SQL na ordem:
 
 1. [`db/schema.sql`](db/schema.sql) - Cria tabelas e políticas RLS
 2. [`db/final_setup.sql`](db/final_setup.sql) - Cria usuários de teste
+3. [`db/migrations/001_create_coupons.sql`](db/migrations/001_create_coupons.sql) - Sistema de cupons
+4. [`db/migrations/002_fix_coupon_security.sql`](db/migrations/002_fix_coupon_security.sql) - Correções de segurança
 
 ### 4. Rodar Localmente
 
@@ -253,6 +266,16 @@ graph LR
 ---
 
 ## 📝 Changelog
+
+Veja o [CHANGELOG.md](CHANGELOG.md) completo para detalhes de todas as versões.
+
+### v1.5.0 (18/01/2026) - Sistema de Cupons
+
+- ✅ **Sistema completo de cupons e promoções**
+- ✅ **Interface admin de gerenciamento**
+- ✅ **Validação em tempo real no checkout**
+- ✅ **Estatísticas de uso**
+- ✅ **Versão visível na UI**
 
 ### v2.0.0 (15/01/2026) - Produção
 
