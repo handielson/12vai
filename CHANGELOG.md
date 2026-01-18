@@ -2,6 +2,59 @@
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.6.0] - 2026-01-18
+
+### 🔌 Sistema de API Pública
+
+#### Adicionado
+- Sistema completo de API REST para integração externa
+- Autenticação via API Key com hash SHA-256
+- Rate limiting baseado em plano do usuário
+- Endpoints CRUD completos para URLs
+- Endpoint de estatísticas de cliques
+- Endpoint de informações do usuário
+- Painel admin para gerenciamento de API keys
+- Documentação completa da API com exemplos
+
+#### Database
+- Tabela `api_keys` para armazenar chaves de API
+- Tabela `api_requests` para logging e analytics
+- Funções SQL: `validate_api_key`, `check_rate_limit`, `log_api_request`, `get_api_stats`
+- RLS policies para segurança de dados
+
+#### Frontend
+- Componente `ApiKeysPanel.tsx` para admin
+- Criar, listar e revogar API keys
+- Estatísticas de uso em tempo real
+- Modal de criação com aviso de segurança
+- Integração na aba "API" do AdminPortal
+
+#### Backend
+- Serviço `apiKeyService.ts` completo
+- Geração segura de chaves (vai_live_xxx / vai_test_xxx)
+- Validação de chaves com cache
+- Rate limiting por hora
+- Logging detalhado de requisições
+
+#### Documentação
+- `API_DOCUMENTATION.md` completa
+- Exemplos em cURL, JavaScript, Python, PHP
+- Guia de autenticação e rate limiting
+- Boas práticas de segurança
+- Códigos de erro documentados
+
+#### Rate Limits por Plano
+- Free: 100 requisições/hora
+- Pro: 1.000 requisições/hora
+- Business: 10.000 requisições/hora
+- White Label: Ilimitado
+
+### 🔧 Melhorias Gerais
+- Versão atualizada para 1.6.0
+- Cache busting via atualização de versão
+
+---
+
 ## [1.5.0] - 2026-01-18
 
 ### 🎫 Sistema de Cupons e Promoções
@@ -72,55 +125,17 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 - README.md atualizado com novos sistemas
 - CHANGELOG.md completo criado
 - Guias de implementação e troubleshooting
-- Scripts de verificação SQL de `user_id` em inserções
-
-### 🎨 UI/UX
-- Versão v1.5.0 visível em todos os rodapés
-- Copyright atualizado para 2026
-- Aba "Cupons" no Portal Admin
+- Scripts de verificação SQL
 
 ---
 
-## [1.4.0] - 2026-01-15
+## [2.0.0] - 2026-01-15
 
-### ✨ Adicionado
-- Sistema de personalização de QR Codes
-- Customização de cores, logos e estilos
-- Integração com qr-code-styling
-
----
-
-## [1.3.0] - 2026-01-13
-
-### ✨ Adicionado
-- Dashboard de Analytics avançado
-- Gráficos de cliques por dispositivo e navegador
-- Métricas de performance
+### ✨ Produção
+- Deploy inicial em produção
+- Domínio 12vai.com configurado
+- Vercel CI/CD ativo
 
 ---
 
-## [1.2.0] - 2026-01-12
-
-### ✨ Adicionado
-- Portal Admin Standalone
-- Modo de manutenção
-- Gestão de usuários e planos
-
----
-
-## [1.1.0] - 2025-12-30
-
-### ✨ Adicionado
-- Sistema de autenticação completo
-- Gestão de planos (Free, Pro, Business)
-- Limites de URLs por plano
-
----
-
-## [1.0.0] - 2025-12-01
-
-### ✨ Lançamento Inicial
-- Encurtador de URLs básico
-- Dashboard de links
-- Relatórios de cliques
-- Integração com Supabase
+**Formato baseado em [Keep a Changelog](https://keepachangelog.com/)**

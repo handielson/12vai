@@ -93,6 +93,17 @@ VaiEncurta é um encurtador de URLs SaaS desenvolvido com React 19 e Supabase, f
 - [x] **Editor Markdown** - Interface admin para edição de documentos
 - [x] **Auditoria** - Rastreamento completo de aceites por usuário
 
+### 🔌 API Pública (v1.6.0)
+
+- [x] **Autenticação via API Key** - Chaves únicas por usuário
+- [x] **Rate Limiting** - Limites por plano (100-10.000 req/hora)
+- [x] **Endpoints REST** - CRUD completo de URLs
+- [x] **Estatísticas** - Analytics de cliques via API
+- [x] **Painel Admin** - Gerenciar chaves, ver uso e estatísticas
+- [x] **Documentação Completa** - Exemplos em cURL, JS, Python, PHP
+- [x] **Segurança** - Hash SHA-256, validação, logging
+- [x] **Múltiplas Chaves** - Ambientes separados (live/test)
+
 ### 🔧 Modo de Manutenção
 
 - [x] **Toggle Admin** - Botão no painel administrativo para ativar/desativar
@@ -155,6 +166,7 @@ Execute os scripts SQL na ordem:
 5. [`db/migrations/003_create_legal_system.sql`](db/migrations/003_create_legal_system.sql) - Sistema de termos
 6. [`db/migrations/004_update_terms_content.sql`](db/migrations/004_update_terms_content.sql) - Termos de Uso completos
 7. [`db/migrations/005_update_privacy_content.sql`](db/migrations/005_update_privacy_content.sql) - Política de Privacidade
+8. [`db/migrations/006_create_api_system.sql`](db/migrations/006_create_api_system.sql) - Sistema de API Pública
 
 ### 4. Rodar Localmente
 
@@ -283,6 +295,16 @@ graph LR
 
 Veja o [CHANGELOG.md](CHANGELOG.md) completo para detalhes de todas as versões.
 
+### v1.6.0 (18/01/2026) - API Pública
+
+- ✅ **Sistema completo de API REST**
+- ✅ **Autenticação via API Key**
+- ✅ **Rate limiting por plano**
+- ✅ **Endpoints CRUD de URLs**
+- ✅ **Estatísticas via API**
+- ✅ **Painel admin de gerenciamento**
+- ✅ **Documentação completa com exemplos**
+
 ### v1.5.0 (18/01/2026) - Sistema de Cupons e Termos
 
 - ✅ **Sistema completo de cupons e promoções**
@@ -293,7 +315,6 @@ Veja o [CHANGELOG.md](CHANGELOG.md) completo para detalhes de todas as versões.
 - ✅ **Termos juridicamente conformes (LGPD)**
 - ✅ **Modal de aceite para usuários**
 - ✅ **Controle de versão de documentos**
-- ✅ **Versão visível na UI**
 
 ### v2.0.0 (15/01/2026) - Produção
 

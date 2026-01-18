@@ -298,7 +298,7 @@ const AdminPortal: React.FC = () => {
                     </div>
                     <div className="flex items-center gap-2">
                         <span className="px-2 py-1 bg-slate-100 rounded text-xs font-mono">
-                            v1.5.0
+                            v1.6.0
                         </span>
                     </div>
                 </div>
