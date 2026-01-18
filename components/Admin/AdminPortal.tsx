@@ -273,34 +273,41 @@ const AdminPortal: React.FC = () => {
                             <ul className="space-y-2 text-sm text-slate-600">
                                 <li>• <strong>Usuários</strong>: Gerencie planos, limites e impersone usuários</li>
                                 <li>• <strong>Manutenção</strong>: Ative/desative o modo de manutenção do site</li>
-                                {activeTab === 'dashboard' && <AdminDashboard />}
-                                {activeTab === 'users' && <div className="text-slate-500">Painel de Usuários em desenvolvimento...</div>}
-                                {activeTab === 'analytics' && <AnalyticsPanel />}
-                                {activeTab === 'coupons' && <CouponManagement />}
-                                {activeTab === 'api' && <ApiKeysPanel />}
-                                {activeTab === 'email' && <EmailTestPanel />}
-                                {activeTab === 'maintenance' && <MaintenanceControl />}
-                                {activeTab === 'plans' && <PlanSettingsPanel />}
-                                {activeTab === 'audit' && <AuditLogPanel />}
-                                {activeTab === 'docs' && <DocumentationPanel />}
-                                {activeTab === 'terms' && <LegalDocumentsPanel />}
-                            </main>
-
-                            {/* Footer com versão */}
-                            <footer className="border-t border-slate-200 bg-white py-4 mt-8">
-                                <div className="max-w-7xl mx-auto px-6 flex items-center justify-between text-sm text-slate-500">
-                                    <div>
-                                        © 2026 VaiEncurta. Todos os direitos reservados.
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="px-2 py-1 bg-slate-100 rounded text-xs font-mono">
-                                            v1.6.0
-                                        </span>
-                                    </div>
-                                </div>
-                            </footer>
+                                <li>• <strong>Planos</strong>: Configure limites e preços dos planos</li>
+                                <li>• <strong>Auditoria</strong>: Visualize logs de todas as ações administrativas</li>
+                                <li>• <strong>Documentação</strong>: Acesse guias e referências do sistema</li>
+                            </ul>
                         </div>
-                        );
+                    </div>
+                )}
+
+                {activeTab === 'users' && <div className="text-slate-500">Painel de Usuários em desenvolvimento...</div>}
+                {activeTab === 'analytics' && <AnalyticsPanel />}
+                {activeTab === 'coupons' && <CouponManagement />}
+                {activeTab === 'api' && <ApiKeysPanel />}
+                {activeTab === 'email' && <EmailTestPanel />}
+                {activeTab === 'maintenance' && <MaintenanceControl />}
+                {activeTab === 'plans' && <PlanSettingsPanel />}
+                {activeTab === 'audit' && <AuditLogPanel />}
+                {activeTab === 'docs' && <DocumentationPanel />}
+                {activeTab === 'terms' && <LegalDocumentsPanel />}
+            </main>
+
+            {/* Footer com versão */}
+            <footer className="border-t border-slate-200 bg-white py-4 mt-8">
+                <div className="max-w-7xl mx-auto px-6 flex items-center justify-between text-sm text-slate-500">
+                    <div>
+                        © 2026 VaiEncurta. Todos os direitos reservados.
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <span className="px-2 py-1 bg-slate-100 rounded text-xs font-mono">
+                            v1.6.0
+                        </span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    );
 };
 
-                        export default AdminPortal;
+export default AdminPortal;
