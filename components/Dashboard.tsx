@@ -30,9 +30,9 @@ import { useAuth } from '../contexts/AuthContext';
 const COLORS = ['#6366f1', '#818cf8', '#a5b4fc', '#c7d2fe'];
 
 const StatCard = ({ title, value, change, icon: Icon, trend }: any) => (
-  <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+  <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
     <div className="flex items-center justify-between mb-4">
-      <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600">
+      <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400">
         <Icon size={24} />
       </div>
       {trend && (
@@ -43,8 +43,8 @@ const StatCard = ({ title, value, change, icon: Icon, trend }: any) => (
         </div>
       )}
     </div>
-    <div className="text-2xl font-bold text-slate-900">{value}</div>
-    <div className="text-sm font-medium text-slate-500 mt-1">{title}</div>
+    <div className="text-2xl font-bold text-slate-900 dark:text-slate-100">{value}</div>
+    <div className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-1">{title}</div>
   </div>
 );
 
@@ -81,11 +81,11 @@ const Dashboard: React.FC = () => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Visão Geral</h1>
-          <p className="text-slate-500">Acompanhe o desempenho dos seus links em tempo real.</p>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Visão Geral</h1>
+          <p className="text-slate-500 dark:text-slate-400">Acompanhe o desempenho dos seus links em tempo real.</p>
         </div>
         <div className="flex items-center gap-2">
-          <select className="bg-white border border-slate-200 text-sm rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-indigo-500/20">
+          <select className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-indigo-500/20">
             <option>Últimos 7 dias</option>
             <option>Últimos 30 dias</option>
             <option>Último ano</option>
@@ -100,8 +100,8 @@ const Dashboard: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <h3 className="text-lg font-bold text-slate-900 mb-6">Tráfego ao Longo do Tempo</h3>
+        <div className="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-6">Tráfego ao Longo do Tempo</h3>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={stats.clicksByDay}>
@@ -124,8 +124,8 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <h3 className="text-lg font-bold text-slate-900 mb-6">Dispositivos</h3>
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-6">Dispositivos</h3>
           <div className="h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -151,9 +151,9 @@ const Dashboard: React.FC = () => {
               <div key={idx} className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[idx] }} />
-                  <span className="text-slate-600">{device.name}</span>
+                  <span className="text-slate-600 dark:text-slate-300">{device.name}</span>
                 </div>
-                <span className="font-bold text-slate-900">{device.value}%</span>
+                <span className="font-bold text-slate-900 dark:text-slate-100">{device.value}%</span>
               </div>
             ))}
           </div>
