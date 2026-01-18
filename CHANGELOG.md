@@ -2,6 +2,67 @@
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.7.0] - 2026-01-18
+
+### 📧 Sistema de Notificações por Email
+
+#### Adicionado
+- Sistema completo de notificações por email com Resend
+- Integração serverless via Vercel Functions
+- Preferências de email por usuário
+- Templates HTML para emails transacionais
+- Painel de testes no admin
+- Logging completo de envios
+- DNS configurado para domínio verificado
+
+#### Database
+- Tabela `email_preferences` para preferências do usuário
+- Tabela `email_logs` para histórico de envios
+- ENUMs: `email_type`, `email_status`, `report_frequency`
+- Funções SQL: `get_email_preferences`, `update_email_preferences`, `can_send_email`, `log_email_sent`, `update_email_status`, `get_email_stats`
+- RLS policies para segurança de dados
+
+#### Frontend
+- Componente `EmailTestPanel.tsx` para admin
+- Interface de teste com verificação de configuração
+- Botões para testar welcome email e limit alert
+- Feedback visual de sucesso/erro
+- Integração na aba "Email" do AdminPortal
+
+#### Backend
+- Serviço `emailService.ts` completo
+- Cliente Resend configurado em `lib/resend.ts`
+- Serverless function `api/send-email.ts`
+- Templates HTML para WelcomeEmail e LimitAlert
+- Verificação de preferências antes de enviar
+- Logging automático de todos os envios
+
+#### Infraestrutura
+- Variáveis de ambiente configuradas na Vercel
+- DNS records adicionados (DKIM, SPF, DMARC)
+- Domínio 12vai.com configurado no Resend
+- Serverless function deployada
+
+#### Tipos de Email
+- **Welcome Email** - Boas-vindas para novos usuários
+- **Limit Alert** - Alerta ao atingir 80% do plano
+- **Weekly Report** - Relatórios semanais (planejado)
+- **Expiry Alert** - Alertas de expiração (planejado)
+
+#### Próximos Passos
+- [ ] Migrar templates para React Email
+- [ ] Implementar relatórios semanais automáticos
+- [ ] Configurar Vercel Cron Jobs
+- [ ] Painel de preferências para usuários
+- [ ] Triggers automáticos (welcome, upgrade, etc)
+
+### 🔧 Melhorias Gerais
+- Versão atualizada para 1.7.0
+- Documentação completa do sistema de emails
+- Guias de configuração DNS
+
+---
+
 ## [1.6.0] - 2026-01-18
 
 ### 🔌 Sistema de API Pública

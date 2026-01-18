@@ -104,6 +104,19 @@ VaiEncurta é um encurtador de URLs SaaS desenvolvido com React 19 e Supabase, f
 - [x] **Segurança** - Hash SHA-256, validação, logging
 - [x] **Múltiplas Chaves** - Ambientes separados (live/test)
 
+### 📧 Sistema de Notificações por Email (v1.7.0)
+
+- [x] **Integração Resend** - Envio profissional de emails transacionais
+- [x] **Serverless API** - Endpoint seguro para envio via Vercel Functions
+- [x] **Preferências de Email** - Usuários controlam quais emails receber
+- [x] **Templates HTML** - Emails de boas-vindas e alertas de limite
+- [x] **Logging Completo** - Histórico de todos os envios
+- [x] **Painel de Testes** - Interface admin para testar envios
+- [x] **Domínio Verificado** - DNS configurado para melhor deliverability
+- [ ] **Templates React Email** - Migração para componentes React
+- [ ] **Relatórios Semanais** - Estatísticas automáticas por email
+- [ ] **Cron Jobs** - Envios agendados via Vercel Cron
+
 ### 🔧 Modo de Manutenção
 
 - [x] **Toggle Admin** - Botão no painel administrativo para ativar/desativar
