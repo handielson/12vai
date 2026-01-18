@@ -21,10 +21,7 @@ CREATE TABLE IF NOT EXISTS legal_documents (
     active BOOLEAN NOT NULL DEFAULT false,
     created_by UUID REFERENCES auth.users(id),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    
-    -- Garantir apenas um documento ativo por tipo
-    CONSTRAINT unique_active_document UNIQUE (type, active) WHERE active = true
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- =====================================================
@@ -47,6 +44,12 @@ CREATE TABLE IF NOT EXISTS user_acceptances (
 
 -- Índices
 CREATE INDEX IF NOT EXISTS idx_legal_documents_type_active ON legal_documents(type, active);
+
+-- Garantir apenas um documento ativo por tipo (partial unique index)
+CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_active_document 
+    ON legal_documents(type) 
+    WHERE active = true;
+
 CREATE INDEX IF NOT EXISTS idx_user_acceptances_user_id ON user_acceptances(user_id);
 CREATE INDEX IF NOT EXISTS idx_user_acceptances_document_id ON user_acceptances(document_id);
 
