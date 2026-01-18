@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, LogOut, Copy, Check, Users, Wrench, Settings, FileText, Clock, BarChart3, ExternalLink, Zap, Tag } from 'lucide-react';
+import { Shield, LogOut, Copy, Check, Users, Wrench, Settings, FileText, Clock, BarChart3, ExternalLink, Zap, Tag, Scale } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { adminService } from '../../services/adminService';
 import { AdminLogin } from './AdminLogin';
@@ -7,12 +7,13 @@ import { MaintenanceControl } from './MaintenanceControl';
 import AdminDashboard from './AdminDashboard';
 import { PlanSettingsPanel } from './PlanSettingsPanel';
 import { DocumentationPanel } from './DocumentationPanel';
+import { LegalDocumentsPanel } from './LegalDocumentsPanel';
 import { AuditLogPanel } from './AuditLogPanel';
 import AnalyticsPanel from './AnalyticsPanel';
 import CouponManagement from './CouponManagement';
 
 
-type TabType = 'dashboard' | 'users' | 'maintenance' | 'plans' | 'audit' | 'docs' | 'analytics' | 'coupons';
+type TabType = 'dashboard' | 'users' | 'maintenance' | 'plans' | 'audit' | 'docs' | 'analytics' | 'coupons' | 'terms';
 
 const AdminPortal: React.FC = () => {
     const { user, signOut } = useAuth();
@@ -121,6 +122,7 @@ const AdminPortal: React.FC = () => {
         { id: 'plans' as TabType, label: 'Planos', icon: Settings },
         { id: 'audit' as TabType, label: 'Auditoria', icon: Clock },
         { id: 'docs' as TabType, label: 'Documentação', icon: FileText },
+        { id: 'terms' as TabType, label: 'Termos', icon: Scale },
     ];
 
     return (
@@ -281,6 +283,7 @@ const AdminPortal: React.FC = () => {
                 {activeTab === 'plans' && <PlanSettingsPanel />}
                 {activeTab === 'audit' && <AuditLogPanel />}
                 {activeTab === 'docs' && <DocumentationPanel />}
+                {activeTab === 'terms' && <LegalDocumentsPanel />}
                 {activeTab === 'maintenance' && <MaintenanceControl />}
             </main>
 
