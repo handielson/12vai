@@ -1,22 +1,26 @@
 -- =====================================================
--- SISTEMA DE ACEITE DE TERMOS - VaiEncurta
+-- SISTEMA DE ACEITE DE TERMOS - VaiEncurta (SIMPLIFICADO)
 -- =====================================================
 -- Migration: 003_create_legal_system.sql
--- Descrição: Sistema completo de termos editáveis com aceite de usuários
+-- Versão: 2.0 (Simplificada e funcional)
 -- =====================================================
+
+-- Limpar se existir
+DROP TABLE IF EXISTS user_acceptances CASCADE;
+DROP TABLE IF EXISTS legal_documents CASCADE;
+DROP TYPE IF EXISTS document_type CASCADE;
 
 -- Criar ENUM para tipos de documento
 CREATE TYPE document_type AS ENUM ('terms', 'privacy', 'cookies');
 
 -- =====================================================
 -- TABELA: legal_documents
--- Armazena os documentos legais editáveis
 -- =====================================================
-CREATE TABLE IF NOT EXISTS legal_documents (
+CREATE TABLE legal_documents (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     type document_type NOT NULL,
     title TEXT NOT NULL,
-    content TEXT NOT NULL, -- Markdown
+    content TEXT NOT NULL,
     version INTEGER NOT NULL DEFAULT 1,
     active BOOLEAN NOT NULL DEFAULT false,
     created_by UUID REFERENCES auth.users(id),
@@ -26,32 +30,24 @@ CREATE TABLE IF NOT EXISTS legal_documents (
 
 -- =====================================================
 -- TABELA: user_acceptances
--- Registra aceites dos usuários
 -- =====================================================
-CREATE TABLE IF NOT EXISTS user_acceptances (
+CREATE TABLE user_acceptances (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     document_id UUID NOT NULL REFERENCES legal_documents(id),
-    document_type document_type NOT NULL,
+    document_type TEXT NOT NULL,
     document_version INTEGER NOT NULL,
     ip_address TEXT,
     user_agent TEXT,
     accepted_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    
-    -- Índices para performance
-    CONSTRAINT idx_user_document UNIQUE (user_id, document_id)
+    UNIQUE (user_id, document_id)
 );
 
 -- Índices
-CREATE INDEX IF NOT EXISTS idx_legal_documents_type_active ON legal_documents(type, active);
-
--- Garantir apenas um documento ativo por tipo (partial unique index)
-CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_active_document 
-    ON legal_documents(type) 
-    WHERE active = true;
-
-CREATE INDEX IF NOT EXISTS idx_user_acceptances_user_id ON user_acceptances(user_id);
-CREATE INDEX IF NOT EXISTS idx_user_acceptances_document_id ON user_acceptances(document_id);
+CREATE INDEX idx_legal_documents_type_active ON legal_documents(type, active);
+CREATE UNIQUE INDEX idx_unique_active_document ON legal_documents(type) WHERE active = true;
+CREATE INDEX idx_user_acceptances_user_id ON user_acceptances(user_id);
+CREATE INDEX idx_user_acceptances_document_id ON user_acceptances(document_id);
 
 -- =====================================================
 -- TRIGGER: Atualizar updated_at
@@ -75,24 +71,23 @@ CREATE TRIGGER trigger_update_legal_documents_updated_at
 CREATE OR REPLACE FUNCTION get_active_documents()
 RETURNS TABLE (
     id UUID,
-    type document_type,
+    type TEXT,
     title TEXT,
     content TEXT,
     version INTEGER
 ) 
-SECURITY DEFINER
-SET search_path = ''
 LANGUAGE plpgsql
+SECURITY DEFINER
 AS $$
 BEGIN
     RETURN QUERY
     SELECT 
         ld.id,
-        ld.type,
+        ld.type::TEXT,
         ld.title,
         ld.content,
         ld.version
-    FROM public.legal_documents ld
+    FROM legal_documents ld
     WHERE ld.active = true
     ORDER BY ld.type;
 END;
@@ -106,21 +101,19 @@ RETURNS TABLE (
     needs_acceptance BOOLEAN,
     pending_documents TEXT[]
 )
-SECURITY DEFINER
-SET search_path = ''
 LANGUAGE plpgsql
+SECURITY DEFINER
 AS $$
 DECLARE
     v_pending TEXT[];
 BEGIN
-    -- Buscar documentos ativos que o usuário não aceitou
     SELECT ARRAY_AGG(ld.type::TEXT)
     INTO v_pending
-    FROM public.legal_documents ld
+    FROM legal_documents ld
     WHERE ld.active = true
     AND NOT EXISTS (
         SELECT 1 
-        FROM public.user_acceptances ua
+        FROM user_acceptances ua
         WHERE ua.user_id = p_user_id
         AND ua.document_id = ld.id
         AND ua.document_version = ld.version
@@ -142,26 +135,23 @@ CREATE OR REPLACE FUNCTION record_acceptance(
     p_user_agent TEXT DEFAULT NULL
 )
 RETURNS BOOLEAN
-SECURITY DEFINER
-SET search_path = ''
 LANGUAGE plpgsql
+SECURITY DEFINER
 AS $$
 DECLARE
-    v_document_type document_type;
+    v_document_type TEXT;
     v_document_version INTEGER;
 BEGIN
-    -- Buscar informações do documento
-    SELECT type, version
+    SELECT type::TEXT, version
     INTO v_document_type, v_document_version
-    FROM public.legal_documents
+    FROM legal_documents
     WHERE id = p_document_id AND active = true;
     
     IF NOT FOUND THEN
         RAISE EXCEPTION 'Documento não encontrado ou inativo';
     END IF;
     
-    -- Inserir ou atualizar aceite
-    INSERT INTO public.user_acceptances (
+    INSERT INTO user_acceptances (
         user_id,
         document_id,
         document_type,
@@ -195,38 +185,34 @@ CREATE OR REPLACE FUNCTION publish_new_version(
     p_admin_user_id UUID
 )
 RETURNS INTEGER
-SECURITY DEFINER
-SET search_path = ''
 LANGUAGE plpgsql
+SECURITY DEFINER
 AS $$
 DECLARE
     v_new_version INTEGER;
-    v_document_type document_type;
+    v_document_type TEXT;
     v_is_admin BOOLEAN;
 BEGIN
-    -- Verificar se usuário é admin
     SELECT is_admin INTO v_is_admin
-    FROM public.users
+    FROM users
     WHERE id = p_admin_user_id;
     
     IF NOT v_is_admin THEN
         RAISE EXCEPTION 'Apenas administradores podem publicar novas versões';
     END IF;
     
-    -- Desativar versão atual
-    UPDATE public.legal_documents
+    UPDATE legal_documents
     SET active = false
-    WHERE type = (SELECT type FROM public.legal_documents WHERE id = p_document_id)
+    WHERE type = (SELECT type FROM legal_documents WHERE id = p_document_id)
     AND active = true;
     
-    -- Incrementar versão e ativar
-    UPDATE public.legal_documents
+    UPDATE legal_documents
     SET 
         version = version + 1,
         active = true,
         updated_at = NOW()
     WHERE id = p_document_id
-    RETURNING version, type INTO v_new_version, v_document_type;
+    RETURNING version, type::TEXT INTO v_new_version, v_document_type;
     
     RETURN v_new_version;
 END;
@@ -236,7 +222,6 @@ $$;
 -- RLS POLICIES
 -- =====================================================
 
--- Habilitar RLS
 ALTER TABLE legal_documents ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_acceptances ENABLE ROW LEVEL SECURITY;
 
@@ -249,8 +234,8 @@ CREATE POLICY "Admins podem inserir documentos"
     ON legal_documents FOR INSERT
     WITH CHECK (
         EXISTS (
-            SELECT 1 FROM public.users
-            WHERE id = (SELECT auth.uid())
+            SELECT 1 FROM users
+            WHERE id = auth.uid()
             AND is_admin = true
         )
     );
@@ -259,8 +244,8 @@ CREATE POLICY "Admins podem atualizar documentos"
     ON legal_documents FOR UPDATE
     USING (
         EXISTS (
-            SELECT 1 FROM public.users
-            WHERE id = (SELECT auth.uid())
+            SELECT 1 FROM users
+            WHERE id = auth.uid()
             AND is_admin = true
         )
     );
@@ -268,28 +253,27 @@ CREATE POLICY "Admins podem atualizar documentos"
 -- Policies para user_acceptances
 CREATE POLICY "Usuários veem seus próprios aceites"
     ON user_acceptances FOR SELECT
-    USING (user_id = (SELECT auth.uid()));
+    USING (user_id = auth.uid());
 
 CREATE POLICY "Admins veem todos os aceites"
     ON user_acceptances FOR SELECT
     USING (
         EXISTS (
-            SELECT 1 FROM public.users
-            WHERE id = (SELECT auth.uid())
+            SELECT 1 FROM users
+            WHERE id = auth.uid()
             AND is_admin = true
         )
     );
 
 CREATE POLICY "Usuários podem registrar aceite"
     ON user_acceptances FOR INSERT
-    WITH CHECK (user_id = (SELECT auth.uid()));
+    WITH CHECK (user_id = auth.uid());
 
 -- =====================================================
 -- INSERIR TERMOS INICIAIS
 -- =====================================================
 
--- Termos de Uso
-INSERT INTO legal_documents (type, title, content, version, active, created_by)
+INSERT INTO legal_documents (type, title, content, version, active)
 VALUES (
     'terms',
     'Termos de Uso - VaiEncurta',
@@ -297,25 +281,20 @@ VALUES (
 
 **Última atualização:** ' || TO_CHAR(NOW(), 'DD/MM/YYYY') || '
 
-Bem-vindo ao **VaiEncurta** (12vai.com). Ao utilizar nossos serviços, você concorda com estes Termos de Uso.
+Bem-vindo ao **VaiEncurta** (12vai.com).
 
 ## 1. Aceitação dos Termos
-Ao acessar e usar o VaiEncurta, você aceita e concorda em cumprir estes Termos de Uso e nossa Política de Privacidade.
+Ao acessar e usar o VaiEncurta, você aceita estes Termos de Uso.
 
-## 2. Descrição do Serviço
-O VaiEncurta é uma plataforma SaaS de encurtamento de URLs.
-
-## 3. Uso Aceitável
-Você pode criar links para conteúdo legal e legítimo. É proibido criar links para conteúdo ilegal, fraudulento ou malicioso.
+## 2. Uso Aceitável
+Você pode criar links para conteúdo legal e legítimo.
 
 Para termos completos, acesse: https://12vai.com/termos',
     1,
-    true,
-    NULL
+    true
 );
 
--- Política de Privacidade
-INSERT INTO legal_documents (type, title, content, version, active, created_by)
+INSERT INTO legal_documents (type, title, content, version, active)
 VALUES (
     'privacy',
     'Política de Privacidade - VaiEncurta',
@@ -323,26 +302,20 @@ VALUES (
 
 **Última atualização:** ' || TO_CHAR(NOW(), 'DD/MM/YYYY') || '
 
-Esta Política de Privacidade descreve como o VaiEncurta coleta, usa e protege suas informações pessoais.
+Esta Política descreve como coletamos e usamos suas informações.
 
 ## 1. Informações que Coletamos
-Coletamos informações de conta, dados de uso e informações de pagamento.
+Coletamos informações de conta e dados de uso.
 
-## 2. Como Usamos Suas Informações
-Usamos seus dados para fornecer o serviço, melhorar a plataforma e garantir segurança.
-
-## 3. Seus Direitos (LGPD)
-Você tem direito a acessar, corrigir, excluir e portar seus dados conforme a LGPD.
+## 2. Seus Direitos (LGPD)
+Você tem direito a acessar, corrigir e excluir seus dados.
 
 Para política completa, acesse: https://12vai.com/privacidade',
     1,
-    true,
-    NULL
+    true
 );
 
 -- =====================================================
 -- VERIFICAÇÃO
 -- =====================================================
 SELECT '✅ SISTEMA DE TERMOS CRIADO COM SUCESSO!' as status;
-SELECT 'Tabelas: legal_documents, user_acceptances' as info;
-SELECT 'Funções: get_active_documents, check_user_acceptance, record_acceptance, publish_new_version' as functions;
