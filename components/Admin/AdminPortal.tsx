@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, LogOut, Copy, Check, Users, Wrench, Settings, FileText, Clock, BarChart3, ExternalLink, Zap, Tag, Scale } from 'lucide-react';
+import { Shield, LogOut, Copy, Check, Users, Wrench, Settings, FileText, Clock, BarChart3, ExternalLink, Zap, Tag, Scale, Key } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { adminService } from '../../services/adminService';
 import { AdminLogin } from './AdminLogin';
@@ -11,9 +11,10 @@ import { LegalDocumentsPanel } from './LegalDocumentsPanel';
 import { AuditLogPanel } from './AuditLogPanel';
 import AnalyticsPanel from './AnalyticsPanel';
 import CouponManagement from './CouponManagement';
+import { ApiKeysPanel } from './ApiKeysPanel';
 
 
-type TabType = 'dashboard' | 'users' | 'maintenance' | 'plans' | 'audit' | 'docs' | 'analytics' | 'coupons' | 'terms';
+type TabType = 'dashboard' | 'users' | 'maintenance' | 'plans' | 'audit' | 'docs' | 'analytics' | 'coupons' | 'terms' | 'api';
 
 const AdminPortal: React.FC = () => {
     const { user, signOut } = useAuth();
@@ -118,6 +119,7 @@ const AdminPortal: React.FC = () => {
         { id: 'users' as TabType, label: 'Usuários', icon: Users },
         { id: 'analytics' as TabType, label: 'Analytics', icon: BarChart3 },
         { id: 'coupons' as TabType, label: 'Cupons', icon: Tag },
+        { id: 'api' as TabType, label: 'API', icon: Key },
         { id: 'maintenance' as TabType, label: 'Manutenção', icon: Wrench },
         { id: 'plans' as TabType, label: 'Planos', icon: Settings },
         { id: 'audit' as TabType, label: 'Auditoria', icon: Clock },
@@ -277,9 +279,10 @@ const AdminPortal: React.FC = () => {
                     </div>
                 )}
 
-                {activeTab === 'users' && <AdminDashboard />}
+                {activeTab === 'users' && <div className="text-slate-500">Painel de Usuários em desenvolvimento...</div>}
                 {activeTab === 'analytics' && <AnalyticsPanel />}
                 {activeTab === 'coupons' && <CouponManagement />}
+                {activeTab === 'api' && <ApiKeysPanel />}
                 {activeTab === 'plans' && <PlanSettingsPanel />}
                 {activeTab === 'audit' && <AuditLogPanel />}
                 {activeTab === 'docs' && <DocumentationPanel />}
