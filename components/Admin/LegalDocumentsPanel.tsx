@@ -1,129 +1,91 @@
-import React, { useState } from 'react';
-import { FileText, Shield, Scale, ChevronDown, ChevronUp } from 'lucide-react';
-
-type DocumentType = 'terms' | 'privacy';
+import React, { useState, useEffect } from 'react';
+import { FileText, Shield, Scale, Edit2, Save, X, AlertCircle } from 'lucide-react';
+import { termsService, LegalDocument } from '../../services/termsService';
+import { useAuth } from '../../contexts/AuthContext';
 
 export const LegalDocumentsPanel: React.FC = () => {
-    const [activeDoc, setActiveDoc] = useState<DocumentType>('terms');
-    const [expandedSections, setExpandedSections] = useState<Set<number>>(new Set([1, 2, 3]));
+    const { user } = useAuth();
+    const [documents, setDocuments] = useState<LegalDocument[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [editingDoc, setEditingDoc] = useState<string | null>(null);
+    const [editContent, setEditContent] = useState('');
+    const [editTitle, setEditTitle] = useState('');
+    const [saving, setSaving] = useState(false);
 
-    const toggleSection = (section: number) => {
-        const newExpanded = new Set(expandedSections);
-        if (newExpanded.has(section)) {
-            newExpanded.delete(section);
-        } else {
-            newExpanded.add(section);
-        }
-        setExpandedSections(newExpanded);
+    useEffect(() => {
+        loadDocuments();
+    }, []);
+
+    const loadDocuments = async () => {
+        setLoading(true);
+        const docs = await termsService.getActiveDocuments();
+        setDocuments(docs);
+        setLoading(false);
     };
 
-    const termsContent = [
-        {
-            id: 1,
-            title: "1. Aceitação dos Termos",
-            content: "Ao acessar e usar o VaiEncurta, você aceita e concorda em cumprir estes Termos de Uso e nossa Política de Privacidade."
-        },
-        {
-            id: 2,
-            title: "2. Descrição do Serviço",
-            content: "O VaiEncurta é uma plataforma SaaS de encurtamento de URLs que oferece criação de links encurtados personalizados, analytics, rastreamento de cliques e planos diferenciados."
-        },
-        {
-            id: 3,
-            title: "3. Registro e Conta",
-            content: "Você deve fornecer informações precisas, manter a confidencialidade de sua senha e ter pelo menos 18 anos para usar nossos serviços."
-        },
-        {
-            id: 4,
-            title: "4. Uso Aceitável",
-            content: "Você pode criar links para conteúdo legal e legítimo. É proibido criar links para conteúdo ilegal, fraudulento, malicioso, phishing, spam ou distribuição de malware."
-        },
-        {
-            id: 5,
-            title: "5. Planos e Pagamentos",
-            content: "Oferecemos planos Free, Pro, Business e White Label. Pagamentos são processados mensalmente ou anualmente. Reembolsos disponíveis em até 7 dias."
-        },
-        {
-            id: 6,
-            title: "6. Propriedade Intelectual",
-            content: "O VaiEncurta e todo seu conteúdo são propriedade da empresa. Você mantém propriedade dos links que cria."
-        },
-        {
-            id: 7,
-            title: "7. Privacidade e Dados",
-            content: "Coletamos informações de conta, dados de uso e informações de pagamento. Não vendemos seus dados pessoais."
-        },
-        {
-            id: 8,
-            title: "8. Limitações de Responsabilidade",
-            content: "Nos esforçamos para manter 99.9% de uptime. Nossa responsabilidade é limitada ao valor pago nos últimos 12 meses."
-        },
-        {
-            id: 9,
-            title: "9. Suspensão e Cancelamento",
-            content: "Podemos suspender contas por violação dos termos. Você pode cancelar a qualquer momento com efeito no final do período de cobrança."
-        },
-        {
-            id: 10,
-            title: "10. Modificações dos Termos",
-            content: "Podemos atualizar estes termos a qualquer momento. Notificaremos sobre mudanças significativas."
-        }
-    ];
+    const startEditing = (doc: LegalDocument) => {
+        setEditingDoc(doc.id);
+        setEditContent(doc.content);
+        setEditTitle(doc.title);
+    };
 
-    const privacyContent = [
-        {
-            id: 1,
-            title: "1. Informações que Coletamos",
-            content: "Coletamos informações de conta (nome, e-mail), dados de uso (URLs, cliques, dispositivos) e informações de pagamento."
-        },
-        {
-            id: 2,
-            title: "2. Como Usamos Suas Informações",
-            content: "Usamos seus dados para fornecer o serviço, melhorar a plataforma, processar pagamentos e garantir segurança."
-        },
-        {
-            id: 3,
-            title: "3. Compartilhamento de Informações",
-            content: "Nunca vendemos seus dados. Compartilhamos apenas com processadores de pagamento e provedores de infraestrutura."
-        },
-        {
-            id: 4,
-            title: "4. Seus Direitos (LGPD)",
-            content: "Você tem direito a acessar, corrigir, excluir, portar seus dados e revogar consentimento conforme a LGPD."
-        },
-        {
-            id: 5,
-            title: "5. Segurança de Dados",
-            content: "Utilizamos criptografia SSL/TLS, senhas com hash bcrypt, firewall, backups diários e acesso restrito."
-        },
-        {
-            id: 6,
-            title: "6. Cookies e Rastreamento",
-            content: "Usamos cookies essenciais para autenticação e cookies de analytics (Google Analytics anônimo)."
-        },
-        {
-            id: 7,
-            title: "7. Transferência Internacional",
-            content: "Dados armazenados em servidores no Brasil e EUA com padrões de segurança SOC 2 e ISO 27001."
-        },
-        {
-            id: 8,
-            title: "8. Privacidade de Menores",
-            content: "Serviço não destinado a menores de 18 anos. Não coletamos intencionalmente dados de menores."
-        },
-        {
-            id: 9,
-            title: "9. Mudanças nesta Política",
-            content: "Podemos atualizar esta política periodicamente. Notificaremos sobre mudanças significativas."
-        },
-        {
-            id: 10,
-            title: "10. Contato",
-            content: "Para questões sobre privacidade: privacidade@12vai.com. Resposta em até 48 horas úteis."
-        }
-    ];
+    const cancelEditing = () => {
+        setEditingDoc(null);
+        setEditContent('');
+        setEditTitle('');
+    };
 
-    const content = activeDoc === 'terms' ? termsContent : privacyContent;
+    const saveDocument = async (docId: string) => {
+        if (!user) return;
+
+        setSaving(true);
+        try {
+            const success = await termsService.updateDocument(docId, editContent, editTitle);
+
+            if (success) {
+                alert('Documento salvo! Para aplicar mudanças aos usuários, publique uma nova versão.');
+                await loadDocuments();
+                cancelEditing();
+            } else {
+                alert('Erro ao salvar documento');
+            }
+        } catch (error) {
+            console.error('Erro ao salvar:', error);
+            alert('Erro ao salvar documento');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const publishNewVersion = async (docId: string) => {
+        if (!user) return;
+
+        if (!confirm('Publicar nova versão? Todos os usuários precisarão aceitar novamente.')) {
+            return;
+        }
+
+        try {
+            const newVersion = await termsService.publishNewVersion(docId, user.id);
+
+            if (newVersion) {
+                alert(`Nova versão ${newVersion} publicada com sucesso!`);
+                await loadDocuments();
+            } else {
+                alert('Erro ao publicar versão');
+            }
+        } catch (error) {
+            console.error('Erro ao publicar:', error);
+            alert('Erro ao publicar versão');
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-64">
+                <div className="text-slate-500">Carregando documentos...</div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">
@@ -131,104 +93,132 @@ export const LegalDocumentsPanel: React.FC = () => {
             <div>
                 <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
                     <Scale className="text-indigo-600" />
-                    Documentos Legais
+                    Documentos Legais (Editável)
                 </h2>
-                <p className="text-slate-600 mt-1">Termos de Uso e Política de Privacidade</p>
+                <p className="text-slate-600 mt-1">Edite e publique novas versões dos termos</p>
             </div>
 
-            {/* Document Selector */}
-            <div className="flex gap-2 bg-slate-100 p-1 rounded-lg">
-                <button
-                    onClick={() => setActiveDoc('terms')}
-                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md font-medium transition-all ${activeDoc === 'terms'
-                            ? 'bg-white text-indigo-600 shadow-sm'
-                            : 'text-slate-600 hover:text-slate-900'
-                        }`}
-                >
-                    <FileText size={18} />
-                    Termos de Uso
-                </button>
-                <button
-                    onClick={() => setActiveDoc('privacy')}
-                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md font-medium transition-all ${activeDoc === 'privacy'
-                            ? 'bg-white text-indigo-600 shadow-sm'
-                            : 'text-slate-600 hover:text-slate-900'
-                        }`}
-                >
-                    <Shield size={18} />
-                    Política de Privacidade
-                </button>
-            </div>
-
-            {/* Document Info */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            {/* Info Alert */}
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                 <div className="flex gap-3">
-                    <FileText className="text-blue-600 flex-shrink-0" size={20} />
-                    <div className="text-sm text-blue-900">
-                        <strong>Última atualização:</strong> 18 de Janeiro de 2026<br />
-                        <strong>Versão:</strong> 1.0
+                    <AlertCircle className="text-amber-600 flex-shrink-0" size={20} />
+                    <div className="text-sm text-amber-900">
+                        <strong>Importante:</strong> Ao publicar uma nova versão, todos os usuários precisarão aceitar os termos novamente no próximo login.
                     </div>
                 </div>
             </div>
 
-            {/* Document Content */}
-            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-                <div className="divide-y divide-slate-200">
-                    {content.map((section) => (
-                        <div key={section.id} className="border-b border-slate-200 last:border-0">
-                            <button
-                                onClick={() => toggleSection(section.id)}
-                                className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors text-left"
-                            >
-                                <h3 className="font-semibold text-slate-900">{section.title}</h3>
-                                {expandedSections.has(section.id) ? (
-                                    <ChevronUp className="text-slate-400" size={20} />
+            {/* Documents */}
+            {documents.map(doc => (
+                <div key={doc.id} className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                    {/* Header */}
+                    <div className="p-6 border-b border-slate-200 bg-slate-50">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                {doc.type === 'terms' ? (
+                                    <FileText className="text-indigo-600" size={24} />
                                 ) : (
-                                    <ChevronDown className="text-slate-400" size={20} />
+                                    <Shield className="text-green-600" size={24} />
                                 )}
-                            </button>
-                            {expandedSections.has(section.id) && (
-                                <div className="px-4 pb-4 text-slate-600 leading-relaxed">
-                                    {section.content}
+                                <div>
+                                    <h3 className="font-bold text-slate-900">{doc.title}</h3>
+                                    <p className="text-sm text-slate-600">
+                                        Versão {doc.version} - Tipo: {doc.type}
+                                    </p>
                                 </div>
-                            )}
+                            </div>
+                            <div className="flex gap-2">
+                                {editingDoc === doc.id ? (
+                                    <>
+                                        <button
+                                            onClick={() => saveDocument(doc.id)}
+                                            disabled={saving}
+                                            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+                                        >
+                                            <Save size={16} />
+                                            {saving ? 'Salvando...' : 'Salvar'}
+                                        </button>
+                                        <button
+                                            onClick={cancelEditing}
+                                            className="flex items-center gap-2 px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300"
+                                        >
+                                            <X size={16} />
+                                            Cancelar
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button
+                                            onClick={() => startEditing(doc)}
+                                            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                                        >
+                                            <Edit2 size={16} />
+                                            Editar
+                                        </button>
+                                        <button
+                                            onClick={() => publishNewVersion(doc.id)}
+                                            className="flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700"
+                                        >
+                                            Publicar Nova Versão
+                                        </button>
+                                    </>
+                                )}
+                            </div>
                         </div>
-                    ))}
-                </div>
-            </div>
+                    </div>
 
-            {/* Download Links */}
-            <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
-                <h4 className="font-semibold text-slate-900 mb-3">Documentos Completos</h4>
-                <div className="flex flex-wrap gap-3">
-                    <a
-                        href="/docs/TERMS_OF_SERVICE.md"
-                        download
-                        className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium text-slate-700"
-                    >
-                        <FileText size={16} />
-                        Baixar Termos de Uso (MD)
-                    </a>
-                    <a
-                        href="/docs/PRIVACY_POLICY.md"
-                        download
-                        className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium text-slate-700"
-                    >
-                        <Shield size={16} />
-                        Baixar Política de Privacidade (MD)
-                    </a>
-                </div>
-            </div>
+                    {/* Content */}
+                    <div className="p-6">
+                        {editingDoc === doc.id ? (
+                            <div className="space-y-4">
+                                {/* Title Editor */}
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                                        Título
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={editTitle}
+                                        onChange={(e) => setEditTitle(e.target.value)}
+                                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                    />
+                                </div>
 
-            {/* Contact Info */}
-            <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
-                <h4 className="font-semibold text-indigo-900 mb-2">Dúvidas sobre os Termos?</h4>
-                <p className="text-sm text-indigo-700">
-                    Entre em contato: <a href="mailto:suporte@12vai.com" className="underline font-medium">suporte@12vai.com</a>
-                </p>
-                <p className="text-xs text-indigo-600 mt-1">
-                    Horário: Segunda a Sexta, 9h às 18h (horário de Brasília)
-                </p>
+                                {/* Content Editor */}
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                                        Conteúdo (Markdown)
+                                    </label>
+                                    <textarea
+                                        value={editContent}
+                                        onChange={(e) => setEditContent(e.target.value)}
+                                        rows={20}
+                                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-mono text-sm"
+                                        placeholder="Digite o conteúdo em Markdown..."
+                                    />
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="prose max-w-none">
+                                <div className="whitespace-pre-wrap text-slate-700">
+                                    {doc.content}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            ))}
+
+            {/* Help */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 className="font-semibold text-blue-900 mb-2">Como usar:</h4>
+                <ol className="text-sm text-blue-800 space-y-1 list-decimal list-inside">
+                    <li>Clique em "Editar" para modificar o documento</li>
+                    <li>Edite o conteúdo em Markdown</li>
+                    <li>Clique em "Salvar" para guardar as mudanças</li>
+                    <li>Clique em "Publicar Nova Versão" para aplicar aos usuários</li>
+                    <li>Usuários verão o modal de aceite no próximo login</li>
+                </ol>
             </div>
         </div>
     );
