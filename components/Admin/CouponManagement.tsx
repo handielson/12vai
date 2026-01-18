@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, BarChart3, Eye, EyeOff } from 'lucide-react';
-import CouponService, { Coupon, CouponStats } from '../services/couponService';
+import CouponService, { Coupon, CouponStats } from '../../services/couponService';
 
 export default function CouponManagement() {
     const [coupons, setCoupons] = useState<Coupon[]>([]);
