@@ -1,7 +1,8 @@
 
 
+
+
 import React, { useState, useEffect } from 'react';
-import { ThemeToggle } from './ThemeToggle';
 import {
   LayoutDashboard,
   Link as LinkIcon,
@@ -218,8 +219,10 @@ const Layout: React.FC<LayoutProps> = ({
           )}
 
           <div className="flex items-center gap-4">
-            <ThemeToggle />
-            <button className="hidden sm:flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all shadow-sm font-medium">
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className="hidden sm:flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all shadow-sm font-medium"
+            >
               <Plus size={18} />
               <span>Criar Novo Link</span>
             </button>
