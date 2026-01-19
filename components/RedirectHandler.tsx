@@ -17,10 +17,12 @@ const RedirectHandler: React.FC<RedirectHandlerProps> = ({ slug }) => {
     useEffect(() => {
         const handleRedirect = async () => {
             try {
-                console.log('🔍 [RedirectHandler] Buscando URL para slug:', slug);
+                // Normalizar slug: remover barra final se existir
+                const normalizedSlug = slug.replace(/\/$/, '');
+                console.log('🔍 [RedirectHandler] Buscando URL para slug:', normalizedSlug);
 
                 // Buscar a URL original pelo slug
-                const url = await urlService.getUrlBySlug(slug);
+                const url = await urlService.getUrlBySlug(normalizedSlug);
 
                 if (!url || !url.original_url) {
                     console.error('🔍 [RedirectHandler] URL não encontrada ou sem original_url');
@@ -31,7 +33,7 @@ const RedirectHandler: React.FC<RedirectHandlerProps> = ({ slug }) => {
                 // Verificar se tem senha
                 if (url.password) {
                     // Verificar se já foi validado nesta sessão
-                    const sessionKey = `pwd_validated_${slug}`;
+                    const sessionKey = `pwd_validated_${normalizedSlug}`;
                     const isValidated = sessionStorage.getItem(sessionKey);
 
                     if (isValidated) {
@@ -75,7 +77,8 @@ const RedirectHandler: React.FC<RedirectHandlerProps> = ({ slug }) => {
         // Validar senha
         if (password === urlData.password) {
             // Senha correta! Armazenar validação na sessão
-            const sessionKey = `pwd_validated_${slug}`;
+            const normalizedSlug = slug.replace(/\/$/, '');
+            const sessionKey = `pwd_validated_${normalizedSlug}`;
             sessionStorage.setItem(sessionKey, 'true');
 
             // Redirecionar
