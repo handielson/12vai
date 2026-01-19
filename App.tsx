@@ -149,9 +149,13 @@ const App: React.FC = () => {
     'forgot-password'
   ];
 
+  // Verificar se é um arquivo estático (tem extensão)
+  const hasFileExtension = /\.[a-zA-Z0-9]+$/.test(currentPath);
+
   const isSlugRoute = currentPath &&
     currentPath !== '' &&
-    !INTERNAL_ROUTES.includes(currentPath.toLowerCase());
+    !INTERNAL_ROUTES.includes(currentPath.toLowerCase()) &&
+    !hasFileExtension; // Excluir arquivos estáticos
 
   // Se for uma rota de slug, mostrar o RedirectHandler
   if (isSlugRoute) {
