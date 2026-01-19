@@ -9,8 +9,8 @@ class UrlService {
   async validateSlug(slug: string, userPlan: string): Promise<{ valid: boolean; error?: string; isPremium: boolean }> {
     const s = slug.toLowerCase().trim();
 
-    if (s.length < 3 || s.length > 12) {
-      return { valid: false, error: 'O slug deve ter entre 3 e 12 caracteres', isPremium: false };
+    if (s.length < 3 || s.length > 30) {
+      return { valid: false, error: 'O slug deve ter entre 3 e 30 caracteres', isPremium: false };
     }
 
     if (!/^[a-z0-9-]+$/.test(s)) {
