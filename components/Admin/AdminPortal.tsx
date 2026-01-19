@@ -281,7 +281,7 @@ const AdminPortal: React.FC = () => {
                     </div>
                 )}
 
-                {activeTab === 'users' && <div className="text-slate-500">Painel de Usuários em desenvolvimento...</div>}
+                {activeTab === 'users' && <AdminDashboard />}
                 {activeTab === 'analytics' && <AnalyticsPanel />}
                 {activeTab === 'coupons' && <CouponManagement />}
                 {activeTab === 'api' && <ApiKeysPanel />}
