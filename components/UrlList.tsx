@@ -104,7 +104,7 @@ const UrlList: React.FC = () => {
       const pngFile = canvas.toDataURL('image/png');
 
       const downloadLink = document.createElement('a');
-      downloadLink.download = `qr-vai-li-${slug}.png`;
+      downloadLink.download = `qr-12vai-${slug}.png`;
       downloadLink.href = pngFile;
       downloadLink.click();
     };
@@ -352,7 +352,7 @@ const UrlList: React.FC = () => {
             {/* Informações */}
             <div className="bg-slate-50 rounded-xl p-4 mb-6">
               <p className="text-sm text-slate-600 mb-1">Link:</p>
-              <p className="text-lg font-bold text-indigo-600 break-all">12vai/{qrModal.url.short_slug}</p>
+              <p className="text-lg font-bold text-indigo-600 break-all">https://12vai.com/{qrModal.url.short_slug}</p>
               <p className="text-xs text-slate-400 mt-2 truncate">{qrModal.url.original_url}</p>
             </div>
 
