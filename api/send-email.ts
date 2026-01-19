@@ -18,7 +18,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         // Enviar via Resend
         const { data, error } = await resend.emails.send({
-            from: process.env.VITE_RESEND_FROM_EMAIL || 'VaiEncurta <noreply@12vai.com>',
+            from: process.env.VITE_RESEND_FROM_EMAIL || '12Vai <noreply@12vai.com>',
             to,
             subject,
             html

@@ -29,7 +29,7 @@ export default function MaintenancePage() {
 
                     {/* Mensagem */}
                     <p className="text-sm text-gray-500 mb-6">
-                        Agradecemos sua paciência enquanto realizamos melhorias no sistema VaiEncurta.
+                        Agradecemos sua paciência enquanto realizamos melhorias no sistema 12Vai.
                     </p>
 
                     {/* Divider */}

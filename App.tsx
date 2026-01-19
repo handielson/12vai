@@ -35,14 +35,14 @@ const App: React.FC = () => {
   // Atualizar título da página dinamicamente
   useEffect(() => {
     const titles: Record<string, string> = {
-      dashboard: 'Painel - VaiEncurta',
-      links: 'Meus Links - VaiEncurta',
-      analytics: 'Relatórios - VaiEncurta',
-      billing: 'Plano - VaiEncurta',
-      settings: 'Configurações - VaiEncurta',
-      admin: 'Admin Panel - VaiEncurta'
+      dashboard: 'Painel - 12Vai',
+      links: 'Meus Links - 12Vai',
+      analytics: 'Relatórios - 12Vai',
+      billing: 'Plano - 12Vai',
+      settings: 'Configurações - 12Vai',
+      admin: 'Admin Panel - 12Vai'
     };
-    document.title = titles[activeTab] || 'VaiEncurta';
+    document.title = titles[activeTab] || '12Vai';
   }, [activeTab]);
 
   // Verificar modo de manutenção
@@ -157,7 +157,7 @@ const App: React.FC = () => {
         <nav className="p-6 flex items-center justify-between max-w-7xl mx-auto w-full">
           <div className="flex items-center gap-2">
             <Zap className="text-indigo-600" fill="currentColor" size={32} />
-            <span className="text-2xl font-black text-slate-900 tracking-tight">VaiEncurta</span>
+            <span className="text-2xl font-black text-slate-900 tracking-tight">12Vai</span>
           </div>
           <div className="flex items-center gap-6">
             {authView !== 'login' && (
@@ -249,7 +249,7 @@ const App: React.FC = () => {
 
         <footer className="p-10 border-t border-slate-200 text-center text-slate-400 font-medium">
           <div className="flex items-center justify-center gap-3">
-            <span>&copy; 2026 VaiEncurta. Encurtador de URLs Brasileiro.</span>
+            <span>&copy; 2026 12Vai. Encurtador de URLs Brasileiro.</span>
             <span className="px-2 py-1 bg-slate-100 rounded text-xs font-mono text-slate-600">
               v1.5.0
             </span>

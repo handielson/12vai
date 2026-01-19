@@ -142,7 +142,7 @@ const AdminPortal: React.FC = () => {
                             </div>
                             <div>
                                 <h1 className="text-xl font-bold text-slate-900">Portal Administrativo</h1>
-                                <p className="text-xs text-slate-500">VaiEncurta</p>
+                                <p className="text-xs text-slate-500">12Vai</p>
                             </div>
                         </div>
 
@@ -213,7 +213,7 @@ const AdminPortal: React.FC = () => {
                     <div className="space-y-6">
                         <div>
                             <h2 className="text-2xl font-bold text-slate-900 mb-2">Dashboard Geral</h2>
-                            <p className="text-slate-600">Visão geral do sistema VaiEncurta</p>
+                            <p className="text-slate-600">Visão geral do sistema 12Vai</p>
                         </div>
 
                         {stats && (
@@ -297,7 +297,7 @@ const AdminPortal: React.FC = () => {
             <footer className="border-t border-slate-200 bg-white py-4 mt-8">
                 <div className="max-w-7xl mx-auto px-6 flex items-center justify-between text-sm text-slate-500">
                     <div>
-                        © 2026 VaiEncurta. Todos os direitos reservados.
+                        © 2026 12Vai. Todos os direitos reservados.
                     </div>
                     <div className="flex items-center gap-2">
                         <span className="px-2 py-1 bg-slate-100 rounded text-xs font-mono">

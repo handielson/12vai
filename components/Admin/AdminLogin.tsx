@@ -60,7 +60,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
                         <Shield size={40} className="text-white" />
                     </div>
                     <h1 className="text-3xl font-bold text-white mb-2">Portal Administrativo</h1>
-                    <p className="text-slate-400">VaiEncurta - Acesso Restrito</p>
+                    <p className="text-slate-400">12Vai - Acesso Restrito</p>
                 </div>
 
                 {/* Login Card */}
@@ -83,7 +83,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                placeholder="admin@vaiencurta.com"
+                                placeholder="admin@12vai.com"
                                 required
                                 className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-colors"
                             />
@@ -136,7 +136,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
                 {/* Footer */}
                 <div className="mt-6 text-center">
                     <p className="text-sm text-slate-400">
-                        VaiEncurta © 2024 - Sistema de Gestão
+                        12Vai © 2024 - Sistema de Gestão
                     </p>
                 </div>
             </div>

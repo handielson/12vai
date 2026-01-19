@@ -134,7 +134,7 @@ class EmailService {
                 return false;
             }
 
-            const subject = `Bem-vindo ao VaiEncurta, ${userName}! 🎉`;
+            const subject = `Bem-vindo ao 12Vai, ${userName}! 🎉`;
 
             console.log('📧 Enviando email via API...');
             console.log('To:', userEmail);
@@ -231,11 +231,11 @@ class EmailService {
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎉 Bem-vindo ao VaiEncurta!</h1>
+            <h1>🎉 Bem-vindo ao 12Vai!</h1>
         </div>
         <div class="content">
             <p>Olá <strong>${userName}</strong>,</p>
-            <p>Estamos muito felizes em ter você conosco! O VaiEncurta é a maneira mais fácil de criar, gerenciar e rastrear links encurtados.</p>
+            <p>Estamos muito felizes em ter você conosco! O 12Vai é a maneira mais fácil de criar, gerenciar e rastrear links encurtados.</p>
             
             <h3>🚀 Primeiros Passos:</h3>
             <ul>
@@ -250,7 +250,7 @@ class EmailService {
             <p>Se precisar de ajuda, nossa equipe está sempre disponível em <a href="mailto:suporte@12vai.com">suporte@12vai.com</a></p>
         </div>
         <div class="footer">
-            <p>© 2026 VaiEncurta. Todos os direitos reservados.</p>
+            <p>© 2026 12Vai. Todos os direitos reservados.</p>
             <p><a href="${EMAIL_CONFIG.baseUrl}/settings">Gerenciar Preferências</a></p>
         </div>
     </div>
@@ -299,7 +299,7 @@ class EmailService {
             <a href="${EMAIL_CONFIG.baseUrl}/pricing" class="button">Ver Planos</a>
         </div>
         <div class="footer">
-            <p>© 2026 VaiEncurta. Todos os direitos reservados.</p>
+            <p>© 2026 12Vai. Todos os direitos reservados.</p>
             <p><a href="${EMAIL_CONFIG.baseUrl}/settings">Gerenciar Preferências</a></p>
         </div>
     </div>

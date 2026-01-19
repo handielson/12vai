@@ -78,7 +78,7 @@ const Layout: React.FC<LayoutProps> = ({
         <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
           <Zap size={24} fill="currentColor" />
         </div>
-        <span className="font-bold text-xl text-white tracking-tight">VaiEncurta</span>
+        <span className="font-bold text-xl text-white tracking-tight">12Vai</span>
       </div>
 
       <nav className="flex-1 px-4 mt-4 space-y-1">
