@@ -35,14 +35,14 @@ const App: React.FC = () => {
   // Atualizar título da página dinamicamente
   useEffect(() => {
     const titles: Record<string, string> = {
-      dashboard: 'Painel - 12Vai',
-      links: 'Meus Links - 12Vai',
-      analytics: 'Relatórios - 12Vai',
-      billing: 'Plano - 12Vai',
-      settings: 'Configurações - 12Vai',
-      admin: 'Admin Panel - 12Vai'
+      dashboard: '12vai.com - Painel',
+      links: '12vai.com - Meus Links',
+      analytics: '12vai.com - Relatórios',
+      billing: '12vai.com - Plano',
+      settings: '12vai.com - Configurações',
+      admin: '12vai.com - Admin Panel'
     };
-    document.title = titles[activeTab] || '12Vai';
+    document.title = titles[activeTab] || '12vai.com';
   }, [activeTab]);
 
   // Verificar modo de manutenção
