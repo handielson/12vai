@@ -31,6 +31,7 @@ export const PlanSettingsPanel: React.FC = () => {
             url_limit: plan.url_limit,
             allow_custom_slugs: plan.allow_custom_slugs,
             allow_premium_slugs: plan.allow_premium_slugs,
+            allow_password_protection: plan.allow_password_protection,
             monthly_price: plan.monthly_price,
             features: plan.features
         });
@@ -178,6 +179,25 @@ export const PlanSettingsPanel: React.FC = () => {
                                         />
                                         <span className="text-sm font-medium text-slate-700">
                                             Slugs Personalizados
+                                        </span>
+                                    </label>
+                                </div>
+
+                                {/* Password Protection */}
+                                <div>
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={isEditing ? editForm.allow_password_protection : plan.allow_password_protection}
+                                            onChange={(e) => isEditing && setEditForm({
+                                                ...editForm,
+                                                allow_password_protection: e.target.checked
+                                            })}
+                                            disabled={!isEditing}
+                                            className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500"
+                                        />
+                                        <span className="text-sm font-medium text-slate-700">
+                                            🔒 Proteção por Senha
                                         </span>
                                     </label>
                                 </div>

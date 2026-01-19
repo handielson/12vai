@@ -1,10 +1,10 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { Sparkles, AlertCircle, CheckCircle2, Zap } from 'lucide-react';
+import { Sparkles, AlertCircle, CheckCircle2, Zap, Lock } from 'lucide-react';
 import { urlService } from '../services/urlService';
 import { User } from '../types';
-import { canCreateUrl, getUrlLimit, formatLimit } from '../lib/planLimits';
+import { canCreateUrl, getUrlLimit, formatLimit, canUsePasswordProtection } from '../lib/planLimits';
 
 interface Props {
   user: User;
@@ -17,6 +17,21 @@ const UrlCreator: React.FC<Props> = ({ user, onCreated }) => {
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'error' | 'success'; msg: string } | null>(null);
   const [validation, setValidation] = useState<{ valid: boolean; error?: string; isPremium: boolean } | null>(null);
+
+  // Password protection states
+  const [password, setPassword] = useState('');
+  const [passwordHint, setPasswordHint] = useState('');
+  const [enablePassword, setEnablePassword] = useState(false);
+  const [canUsePassword, setCanUsePassword] = useState(false);
+
+  // Verificar permissão de proteção por senha
+  useEffect(() => {
+    const checkPermission = async () => {
+      const allowed = await canUsePasswordProtection(user.plan);
+      setCanUsePassword(allowed);
+    };
+    checkPermission();
+  }, [user.plan]);
 
   // Validar slug quando mudar
   useEffect(() => {
@@ -58,17 +73,35 @@ const UrlCreator: React.FC<Props> = ({ user, onCreated }) => {
         return;
       }
 
+      // Validar senha se habilitada
+      if (enablePassword && password.length < 4) {
+        setFeedback({ type: 'error', msg: 'A senha deve ter no mínimo 4 caracteres' });
+        setLoading(false);
+        return;
+      }
+
       // 🐛 DEBUG: Log dos valores antes de enviar
       console.log('🔍 [UrlCreator] Valores capturados do formulário:');
       console.log('  - original_url:', url);
       console.log('  - slug:', slug);
+      console.log('  - password:', enablePassword ? '***' : 'none');
       console.log('  - user.id:', user.id);
       console.log('  - user.plan:', user.plan);
 
-      await urlService.createUrl({ original_url: url, slug, user });
+      await urlService.createUrl({
+        original_url: url,
+        slug,
+        user,
+        password: enablePassword ? password : null,
+        password_hint: enablePassword ? passwordHint : null
+      });
+
       setFeedback({ type: 'success', msg: 'Link criado com sucesso! Ele já "vai".' });
       setUrl('');
       setSlug('');
+      setPassword('');
+      setPasswordHint('');
+      setEnablePassword(false);
       onCreated();
     } catch (e: any) {
       console.error('🔍 [UrlCreator] Erro ao criar URL:', e);
@@ -134,6 +167,57 @@ const UrlCreator: React.FC<Props> = ({ user, onCreated }) => {
             <div className="mt-3 p-3 bg-amber-50 rounded-xl border border-amber-100 text-[11px] text-amber-800 leading-relaxed">
               <strong>Atenção:</strong> Slugs curtos e comerciais como "{slug}" são <strong>Premium</strong>.
               Eles aumentam a confiança do clique em 40%. <button className="underline font-bold">Faça upgrade para Business</button>.
+            </div>
+          )}
+        </div>
+
+        {/* Password Protection */}
+        <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
+          {canUsePassword ? (
+            <div className="space-y-3">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={enablePassword}
+                  onChange={(e) => setEnablePassword(e.target.checked)}
+                  className="w-4 h-4 text-amber-600 rounded focus:ring-amber-500"
+                />
+                <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                  <Lock size={14} />
+                  Proteger com senha
+                </span>
+              </label>
+
+              {enablePassword && (
+                <div className="ml-6 space-y-3 animate-in fade-in duration-200">
+                  <div>
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Senha (mín. 4 caracteres)"
+                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-lg outline-none focus:ring-2 focus:ring-amber-500/20 transition-all text-sm"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      value={passwordHint}
+                      onChange={(e) => setPasswordHint(e.target.value)}
+                      placeholder="Dica da senha (opcional)"
+                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-lg outline-none focus:ring-2 focus:ring-amber-500/20 transition-all text-sm"
+                    />
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    💡 Visitantes precisarão digitar a senha antes de acessar o link
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-200 dark:border-amber-800 text-xs text-amber-800 dark:text-amber-300">
+              🔒 <strong>Proteção por senha</strong> disponível no Plano Pro.
+              <button className="underline font-bold ml-1">Fazer upgrade</button>
             </div>
           )}
         </div>

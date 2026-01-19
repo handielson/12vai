@@ -63,3 +63,22 @@ export const formatLimit = (limit: number) => {
     if (limit === Infinity) return '∞';
     return limit.toString();
 };
+
+// Verificar se o plano do usuário permite proteção por senha
+export async function canUsePasswordProtection(userPlan: string): Promise<boolean> {
+    // Importar supabase dinamicamente para evitar circular dependency
+    const { supabase } = await import('../lib/supabase');
+
+    const { data, error } = await supabase
+        .from('plans')
+        .select('allow_password_protection')
+        .eq('name', userPlan)
+        .single();
+
+    if (error) {
+        console.error('Erro ao verificar permissão de senha:', error);
+        return false;
+    }
+
+    return data?.allow_password_protection || false;
+}

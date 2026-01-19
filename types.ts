@@ -20,6 +20,8 @@ export interface Url {
   active: boolean;
   created_at: string;
   qr_config?: QRConfig | null; // Configuração do QR Code
+  password?: string | null; // Senha de proteção
+  password_hint?: string | null; // Dica da senha (opcional)
 }
 
 export interface DashboardStats {

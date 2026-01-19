@@ -6,6 +6,7 @@ export interface PlanSettings {
     url_limit: number | null;
     allow_custom_slugs: boolean;
     allow_premium_slugs: boolean;
+    allow_password_protection?: boolean; // Nova feature
     monthly_price: number;
     features: string[];
     created_at: string;

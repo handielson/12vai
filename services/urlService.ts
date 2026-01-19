@@ -56,7 +56,13 @@ class UrlService {
     return { valid: true, isPremium };
   }
 
-  async createUrl(data: { original_url: string, slug?: string, user: User }): Promise<Url> {
+  async createUrl(data: {
+    original_url: string,
+    slug?: string,
+    user: User,
+    password?: string | null,
+    password_hint?: string | null
+  }): Promise<Url> {
     const slugRequested = data.slug?.toLowerCase().trim();
 
     // Se não houver slug, gera um aleatório (padrão Free)
@@ -74,6 +80,11 @@ class UrlService {
       }
     }
 
+    // Validar senha se fornecida
+    if (data.password && data.password.length < 4) {
+      throw new Error("A senha deve ter no mínimo 4 caracteres");
+    }
+
     // Preparar payload para inserção
     const payload = {
       user_id: data.user.id,
@@ -83,6 +94,8 @@ class UrlService {
       title: data.original_url.split('//')[1]?.split('/')[0] || 'Novo Link',
       is_premium: slugRequested ? (await this.isPremiumSlug(slugRequested)) : false,
       active: true,
+      password: data.password || null,
+      password_hint: data.password_hint || null,
     };
 
     // 🐛 DEBUG: Log do payload antes de enviar

@@ -12,7 +12,8 @@ import {
   QrCode,
   Download,
   X,
-  Palette
+  Palette,
+  Lock
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Url } from '../types';
@@ -88,7 +89,7 @@ const UrlList: React.FC = () => {
   };
 
   const downloadQRCode = (slug: string) => {
-    const svg = document.getElementById(`qr-${slug}`) as SVGElement;
+    const svg = document.getElementById(`qr-${slug}`) as unknown as SVGElement;
     if (!svg) return;
 
     const svgData = new XMLSerializer().serializeToString(svg);
@@ -196,6 +197,11 @@ const UrlList: React.FC = () => {
                           {url.is_premium && (
                             <span className="ml-2 p-1 bg-amber-100 text-amber-600 rounded" title="Link Premium">
                               <Sparkles size={12} />
+                            </span>
+                          )}
+                          {url.password && (
+                            <span className="ml-2 p-1 bg-amber-100 text-amber-600 rounded" title="Protegido por senha">
+                              <Lock size={12} />
                             </span>
                           )}
                         </div>
