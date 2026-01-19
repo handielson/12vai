@@ -342,7 +342,7 @@ const UrlList: React.FC = () => {
             <div className="bg-white p-6 rounded-xl border-2 border-slate-200 mb-6 flex justify-center">
               <QRCodeSVG
                 id={`qr-${qrModal.url.short_slug}`}
-                value={`${window.location.origin}/${qrModal.url.short_slug}`}
+                value={`https://12vai.com/${qrModal.url.short_slug}`}
                 size={256}
                 level="H"
                 includeMargin={true}
