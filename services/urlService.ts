@@ -212,18 +212,26 @@ class UrlService {
 
   // Buscar URL pelo slug (para redirecionamento)
   async getUrlBySlug(slug: string): Promise<Url | null> {
+    console.log('🔍 [getUrlBySlug] Buscando slug:', slug);
+
     const { data, error } = await supabase
       .from('urls')
       .select('*')
       .eq('short_slug', slug)
       .eq('active', true)
-      .single();
+      .maybeSingle(); // Usa maybeSingle() em vez de single() para não dar erro se não encontrar
 
     if (error) {
-      console.error('Erro ao buscar URL por slug:', error);
+      console.error('🔍 [getUrlBySlug] Erro ao buscar URL:', error);
       return null;
     }
 
+    if (!data) {
+      console.log('🔍 [getUrlBySlug] Nenhuma URL encontrada para slug:', slug);
+      return null;
+    }
+
+    console.log('🔍 [getUrlBySlug] URL encontrada:', data);
     return data;
   }
 
