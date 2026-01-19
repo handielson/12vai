@@ -221,7 +221,7 @@ const UrlList: React.FC = () => {
                     <td className="px-8 py-5 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
-                          onClick={() => window.open(`http://localhost:3000/${url.short_slug}`, '_blank')}
+                          onClick={() => window.open(`${window.location.origin}/${url.short_slug}`, '_blank')}
                           className="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-white border border-transparent hover:border-blue-100 rounded-xl transition-all shadow-sm"
                           title="Abrir Link"
                         >
@@ -342,7 +342,7 @@ const UrlList: React.FC = () => {
             <div className="bg-white p-6 rounded-xl border-2 border-slate-200 mb-6 flex justify-center">
               <QRCodeSVG
                 id={`qr-${qrModal.url.short_slug}`}
-                value={`http://localhost:3000/${qrModal.url.short_slug}`}
+                value={`${window.location.origin}/${qrModal.url.short_slug}`}
                 size={256}
                 level="H"
                 includeMargin={true}
