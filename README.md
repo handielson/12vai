@@ -44,6 +44,7 @@ VaiEncurta é um encurtador de URLs SaaS desenvolvido com React 19 e Supabase, f
 - [x] **Criar URLs Encurtadas** - Interface intuitiva com validação em tempo real
 - [x] **Slugs Personalizados** - Defina seu próprio slug (planos Pro+)
 - [x] **Slugs Premium** - Acesso a termos premium (planos Business+)
+- [x] **Proteção por Senha** - Links protegidos com senha e dica opcional (planos Pro+)
 - [x] **Listar URLs** - Visualize todas suas URLs com busca
 - [x] **Deletar URLs** - Remova URLs com confirmação de segurança
 - [x] **Redirecionamento Automático** - Redireciona para URL original instantaneamente
@@ -117,6 +118,24 @@ VaiEncurta é um encurtador de URLs SaaS desenvolvido com React 19 e Supabase, f
 - [ ] **Relatórios Semanais** - Estatísticas automáticas por email
 - [ ] **Cron Jobs** - Envios agendados via Vercel Cron
 
+### 🔒 Proteção por Senha (v1.8.0)
+
+- [x] **Links Protegidos** - Adicione senha a qualquer link encurtado
+- [x] **Dica de Senha** - Campo opcional para ajudar usuários a lembrar
+- [x] **Modal Elegante** - Interface premium para entrada de senha
+- [x] **Validação em Tempo Real** - Feedback imediato de senha incorreta
+- [x] **Cache de Sessão** - Senha validada não é pedida novamente na mesma sessão
+- [x] **Restrição por Plano** - Disponível para Pro, Business e White Label
+- [x] **Indicador Visual** - Ícone 🔒 na lista de URLs protegidas
+- [x] **Configuração Admin** - Controle quais planos podem usar a feature
+- [x] **Texto Plano** - Senha armazenada em texto plano para melhor UX
+
+**Como usar:**
+1. Criar novo link → Marcar "🔒 Proteger com senha"
+2. Definir senha (mín. 4 caracteres) e dica opcional
+3. Visitantes precisarão digitar a senha antes de acessar
+4. Senha validada fica em cache durante a sessão
+
 ### 🔧 Modo de Manutenção
 
 - [x] **Toggle Admin** - Botão no painel administrativo para ativar/desativar
@@ -180,6 +199,13 @@ Execute os scripts SQL na ordem:
 6. [`db/migrations/004_update_terms_content.sql`](db/migrations/004_update_terms_content.sql) - Termos de Uso completos
 7. [`db/migrations/005_update_privacy_content.sql`](db/migrations/005_update_privacy_content.sql) - Política de Privacidade
 8. [`db/migrations/006_create_api_system.sql`](db/migrations/006_create_api_system.sql) - Sistema de API Pública
+9. [`db/migrations/007_create_email_system.sql`](db/migrations/007_create_email_system.sql) - Sistema de Notificações
+10. [`db/migrations/008_add_password_protection_to_plans.sql`](db/migrations/008_add_password_protection_to_plans.sql) - Proteção por Senha (Plans)
+11. [`db/migrations/009_add_password_hint.sql`](db/migrations/009_add_password_hint.sql) - Campo password_hint
+12. [`db/migrations/010_fix_lesmas_to_slugs.sql`](db/migrations/010_fix_lesmas_to_slugs.sql) - Correção de terminologia
+
+**OU execute o script completo:**
+- [`db/migrations/EXECUTE_ALL_PASSWORD_MIGRATIONS.sql`](db/migrations/EXECUTE_ALL_PASSWORD_MIGRATIONS.sql) - Todas as migrations de senha
 
 ### 4. Rodar Localmente
 
@@ -307,6 +333,17 @@ graph LR
 ## 📝 Changelog
 
 Veja o [CHANGELOG.md](CHANGELOG.md) completo para detalhes de todas as versões.
+
+### v1.8.0 (19/01/2026) - Proteção por Senha
+
+- ✅ **Sistema completo de proteção por senha para links**
+- ✅ **Modal elegante de entrada de senha**
+- ✅ **Dica de senha opcional**
+- ✅ **Cache de validação via sessionStorage**
+- ✅ **Restrição por plano (Pro, Business, White Label)**
+- ✅ **Indicador visual 🔒 na lista de URLs**
+- ✅ **Configuração admin por plano**
+- ✅ **Correção de terminologia: Lesmas → Slugs**
 
 ### v1.6.0 (18/01/2026) - API Pública
 
