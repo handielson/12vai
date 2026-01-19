@@ -32,6 +32,18 @@ const App: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
 
+  // Sincronizar activeTab com a URL atual
+  useEffect(() => {
+    const currentPath = window.location.pathname.slice(1);
+    const INTERNAL_ROUTES = ['dashboard', 'links', 'analytics', 'billing', 'settings'];
+
+    if (INTERNAL_ROUTES.includes(currentPath)) {
+      setActiveTab(currentPath);
+    } else if (currentPath === '' || currentPath === '/') {
+      setActiveTab('dashboard');
+    }
+  }, []);
+
   // Atualizar título da página dinamicamente
   useEffect(() => {
     const titles: Record<string, string> = {
@@ -123,9 +135,23 @@ const App: React.FC = () => {
   // ============================================
   // VERIFICAÇÃO DE SLUG (SEGUNDA PRIORIDADE)
   // ============================================
+  // Define all internal routes that should NOT be treated as slugs
+  const INTERNAL_ROUTES = [
+    'dashboard',
+    'links',
+    'analytics',
+    'billing',
+    'settings',
+    'admin',
+    'login',
+    'register',
+    'forgot',
+    'forgot-password'
+  ];
+
   const isSlugRoute = currentPath &&
     currentPath !== '' &&
-    !['dashboard', 'links', 'admin'].includes(currentPath);
+    !INTERNAL_ROUTES.includes(currentPath.toLowerCase());
 
   // Se for uma rota de slug, mostrar o RedirectHandler
   if (isSlugRoute) {

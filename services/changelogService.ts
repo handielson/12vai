@@ -22,7 +22,7 @@ export const changelogService = {
             .select('*')
             .order('release_date', { ascending: false })
             .limit(1)
-            .single();
+            .maybeSingle();
 
         if (error) {
             console.error('Erro ao buscar versão mais recente:', error);
@@ -40,7 +40,7 @@ export const changelogService = {
             .from('app_changelog')
             .select('*')
             .eq('version', version)
-            .single();
+            .maybeSingle();
 
         if (error) {
             console.error(`Erro ao buscar changelog da versão ${version}:`, error);
