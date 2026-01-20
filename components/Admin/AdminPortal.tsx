@@ -58,6 +58,25 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ initialTab }) => {
         }
     }, [activeTab]);
 
+    // Atualizar título da página dinamicamente
+    useEffect(() => {
+        const tabTitles: Record<TabType, string> = {
+            dashboard: 'Painel',
+            users: 'Usuários',
+            analytics: 'Analytics',
+            coupons: 'Cupons',
+            api: 'API',
+            email: 'Email',
+            maintenance: 'Manutenção',
+            plans: 'Planos',
+            audit: 'Auditoria',
+            docs: 'Documentação',
+            terms: 'Termos'
+        };
+
+        document.title = `12vai.com - ${tabTitles[activeTab]}`;
+    }, [activeTab]);
+
     const checkAdminAccess = async () => {
         // Se não há usuário, mostrar tela de login do admin
         if (!user) {
