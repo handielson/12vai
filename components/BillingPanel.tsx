@@ -15,8 +15,10 @@ export function BillingPanel() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        loadBillingData();
-        loadPlanSettings();
+        if (user) {
+            loadBillingData();
+            loadPlanSettings();
+        }
     }, [user]);
 
     async function loadPlanSettings() {
@@ -223,8 +225,8 @@ export function BillingPanel() {
                                         <button
                                             onClick={() => handleStartCheckout(plan.plan_name as 'pro' | 'business', 'month')}
                                             className={`w-full px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition text-sm ${plan.plan_name === 'pro'
-                                                    ? 'bg-white text-blue-600'
-                                                    : 'bg-white text-purple-600'
+                                                ? 'bg-white text-blue-600'
+                                                : 'bg-white text-purple-600'
                                                 }`}
                                         >
                                             Assinar Mensal
