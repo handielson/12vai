@@ -214,51 +214,55 @@ const App: React.FC = () => {
   if (!user) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
-        <nav className="p-6 flex items-center justify-between max-w-7xl mx-auto w-full">
+        <nav className="p-6 flex items-center justify-center max-w-7xl mx-auto w-full">
           <div className="flex items-center gap-2">
             <Zap className="text-indigo-600" fill="currentColor" size={32} />
             <span className="text-2xl font-black text-slate-900 tracking-tight">12Vai</span>
           </div>
-          <div className="flex items-center gap-6">
-            {authView !== 'login' && (
+        </nav>
+
+        {/* Unified Auth View */}
+        <div className="flex-1 flex items-center justify-center p-6">
+          <div className="w-full max-w-md">
+            {/* Tabs */}
+            <div className="flex gap-2 mb-6 bg-slate-100 p-1 rounded-2xl">
               <button
                 onClick={() => setAuthView('login')}
-                className="px-6 py-3 text-slate-700 hover:text-slate-900 font-bold text-sm transition-all"
+                className={`flex-1 py-3 px-6 rounded-xl font-bold text-sm transition-all ${authView === 'login'
+                  ? 'bg-white text-slate-900 shadow-md'
+                  : 'text-slate-600 hover:text-slate-900'
+                  }`}
               >
                 Entrar
               </button>
-            )}
-            {authView !== 'register' && (
               <button
                 onClick={() => setAuthView('register')}
-                className="px-6 py-3 bg-slate-900 text-white rounded-2xl font-bold text-sm hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10"
+                className={`flex-1 py-3 px-6 rounded-xl font-bold text-sm transition-all ${authView === 'register'
+                  ? 'bg-white text-slate-900 shadow-md'
+                  : 'text-slate-600 hover:text-slate-900'
+                  }`}
               >
-                Começar Grátis
+                Criar Conta
               </button>
+            </div>
+
+            {/* Auth Forms */}
+            {authView === 'login' && (
+              <LoginForm
+                onSwitchToRegister={() => setAuthView('register')}
+                onSwitchToForgot={() => setAuthView('forgot')}
+              />
+            )}
+
+            {authView === 'register' && (
+              <RegisterForm onSwitchToLogin={() => setAuthView('login')} />
+            )}
+
+            {authView === 'forgot' && (
+              <ForgotPassword onBack={() => setAuthView('login')} />
             )}
           </div>
-        </nav>
-
-        {authView === 'login' && (
-          <div className="flex-1 flex items-center justify-center p-6">
-            <LoginForm
-              onSwitchToRegister={() => setAuthView('register')}
-              onSwitchToForgot={() => setAuthView('forgot')}
-            />
-          </div>
-        )}
-
-        {authView === 'register' && (
-          <div className="flex-1 flex items-center justify-center p-6">
-            <RegisterForm onSwitchToLogin={() => setAuthView('login')} />
-          </div>
-        )}
-
-        {authView === 'forgot' && (
-          <div className="flex-1 flex items-center justify-center p-6">
-            <ForgotPassword onBack={() => setAuthView('login')} />
-          </div>
-        )}
+        </div>
 
         {authView === 'login' && (
           <div className="flex-1">
