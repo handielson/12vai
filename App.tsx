@@ -6,7 +6,7 @@ import Dashboard from './components/Dashboard';
 import UrlList from './components/UrlList';
 import UrlCreator from './components/UrlCreator';
 import Reports from './components/Reports';
-import Billing from './components/Billing';
+import { BillingPanel } from './components/BillingPanel';
 import Settings from './components/Settings';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import AdminPortal from './components/Admin/AdminPortal';
@@ -646,7 +646,7 @@ const App: React.FC = () => {
       )}
       {activeTab === 'links' && <UrlList />}
       {activeTab === 'analytics' && <Reports />}
-      {activeTab === 'billing' && <Billing />}
+      {activeTab === 'billing' && <BillingPanel />}
       {activeTab === 'settings' && <Settings />}
 
       {/* Modal de atualizações */}
