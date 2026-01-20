@@ -77,6 +77,7 @@ const App: React.FC = () => {
     const loadPlanSettings = async () => {
       try {
         const plans = await planSettingsService.getAllPlanSettings();
+        console.log('📊 Planos carregados:', plans);
         setPlanSettings(plans);
       } catch (error) {
         console.error('Erro ao carregar planos:', error);
