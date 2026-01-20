@@ -480,6 +480,12 @@ const App: React.FC = () => {
                           <span className="text-slate-500">/mês</span>
                         </div>
                         <ul className="space-y-3 mb-8">
+                          {/* Limite de URLs como primeiro item */}
+                          <li className="flex items-center gap-2 text-slate-600">
+                            <span className="text-green-500">✓</span>
+                            {plan.url_limit === null ? 'Links ilimitados' : `${plan.url_limit.toLocaleString('pt-BR')} links`}
+                          </li>
+                          {/* Demais features */}
                           {plan.features.map((feature, j) => (
                             <li key={j} className="flex items-center gap-2 text-slate-600">
                               <span className="text-green-500">✓</span> {feature}
@@ -489,8 +495,8 @@ const App: React.FC = () => {
                         <button
                           onClick={() => setAuthView('register')}
                           className={`w-full py-3 rounded-xl font-bold transition-all ${isPro
-                              ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-xl'
-                              : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-xl'
+                            : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                             }`}
                         >
                           {plan.monthly_price === 0 ? 'Começar Grátis' : `Assinar ${planDisplayNames[plan.plan_name]}`}
@@ -525,8 +531,8 @@ const App: React.FC = () => {
                         <button
                           onClick={() => setAuthView('register')}
                           className={`w-full py-3 rounded-xl font-bold transition-all ${plan.popular
-                              ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-xl'
-                              : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-xl'
+                            : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                             }`}
                         >
                           {plan.price === "R$ 0,00" ? 'Começar Grátis' : `Assinar ${plan.name}`}
