@@ -20,6 +20,7 @@ import MaintenancePage from './components/MaintenancePage';
 import ContactPage from './components/ContactPage';
 import { useAuth } from './contexts/AuthContext';
 import { termsService } from './services/termsService';
+import { planSettingsService, PlanSettings } from './services/planSettingsService';
 import { Zap, Sparkles } from 'lucide-react';
 import { supabase } from './lib/supabase';
 
@@ -32,6 +33,7 @@ const App: React.FC = () => {
   const [checkingMaintenance, setCheckingMaintenance] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
+  const [planSettings, setPlanSettings] = useState<PlanSettings[]>([]);
 
   // Sincronizar activeTab com a URL atual
   useEffect(() => {
@@ -69,6 +71,19 @@ const App: React.FC = () => {
       checkIfAdmin();
     }
   }, [user]);
+
+  // Carregar configurações de planos
+  useEffect(() => {
+    const loadPlanSettings = async () => {
+      try {
+        const plans = await planSettingsService.getAllPlanSettings();
+        setPlanSettings(plans);
+      } catch (error) {
+        console.error('Erro ao carregar planos:', error);
+      }
+    };
+    loadPlanSettings();
+  }, []);
 
   const checkMaintenanceMode = async () => {
     try {
@@ -442,61 +457,83 @@ const App: React.FC = () => {
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                  {[
-                    {
-                      name: "Free",
-                      price: "R$ 0",
-                      period: "/mês",
-                      features: ["100 links", "Analytics básico", "QR Codes simples", "Suporte por email"],
-                      cta: "Começar Grátis",
-                      popular: false
-                    },
-                    {
-                      name: "Pro",
-                      price: "R$ 29",
-                      period: "/mês",
-                      features: ["1.000 links", "Analytics avançado", "QR Codes personalizados", "Links protegidos", "Suporte prioritário"],
-                      cta: "Assinar Pro",
-                      popular: true
-                    },
-                    {
-                      name: "Business",
-                      price: "R$ 99",
-                      period: "/mês",
-                      features: ["Links ilimitados", "Analytics completo", "API acesso", "White label", "Suporte 24/7"],
-                      cta: "Assinar Business",
-                      popular: false
-                    }
-                  ].map((plan, i) => (
-                    <div key={i} className={`bg-white p-8 rounded-2xl border-2 ${plan.popular ? 'border-indigo-600 shadow-2xl scale-105' : 'border-slate-200'} relative`}>
-                      {plan.popular && (
-                        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-1 rounded-full text-sm font-bold">
-                          Mais Popular
+                  {planSettings.length > 0 ? planSettings.map((plan, i) => {
+                    const isPro = plan.plan_name === 'pro';
+                    const planDisplayNames: Record<string, string> = {
+                      'free': 'Free',
+                      'pro': 'Pro',
+                      'business': 'Business'
+                    };
+
+                    return (
+                      <div key={i} className={`bg-white p-8 rounded-2xl border-2 ${isPro ? 'border-indigo-600 shadow-2xl scale-105' : 'border-slate-200'} relative`}>
+                        {isPro && (
+                          <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-1 rounded-full text-sm font-bold">
+                            Mais Popular
+                          </div>
+                        )}
+                        <h3 className="text-2xl font-black text-slate-900 mb-2">{planDisplayNames[plan.plan_name] || plan.plan_name}</h3>
+                        <div className="mb-6">
+                          <span className="text-5xl font-black text-slate-900">
+                            R$ {plan.monthly_price.toFixed(2).replace('.', ',')}
+                          </span>
+                          <span className="text-slate-500">/mês</span>
                         </div>
-                      )}
-                      <h3 className="text-2xl font-black text-slate-900 mb-2">{plan.name}</h3>
-                      <div className="mb-6">
-                        <span className="text-5xl font-black text-slate-900">{plan.price}</span>
-                        <span className="text-slate-500">{plan.period}</span>
+                        <ul className="space-y-3 mb-8">
+                          {plan.features.map((feature, j) => (
+                            <li key={j} className="flex items-center gap-2 text-slate-600">
+                              <span className="text-green-500">✓</span> {feature}
+                            </li>
+                          ))}
+                        </ul>
+                        <button
+                          onClick={() => setAuthView('register')}
+                          className={`w-full py-3 rounded-xl font-bold transition-all ${isPro
+                              ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-xl'
+                              : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                            }`}
+                        >
+                          {plan.monthly_price === 0 ? 'Começar Grátis' : `Assinar ${planDisplayNames[plan.plan_name]}`}
+                        </button>
                       </div>
-                      <ul className="space-y-3 mb-8">
-                        {plan.features.map((feature, j) => (
-                          <li key={j} className="flex items-center gap-2 text-slate-600">
-                            <span className="text-green-500">✓</span> {feature}
-                          </li>
-                        ))}
-                      </ul>
-                      <button
-                        onClick={() => setAuthView('register')}
-                        className={`w-full py-3 rounded-xl font-bold transition-all ${plan.popular
-                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-xl'
-                            : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                          }`}
-                      >
-                        {plan.cta}
-                      </button>
-                    </div>
-                  ))}
+                    );
+                  }) : (
+                    // Fallback enquanto carrega
+                    [
+                      { name: "Free", price: "R$ 0,00", features: ["100 links", "Analytics básico", "QR Codes simples"] },
+                      { name: "Pro", price: "R$ 29,90", features: ["1.000 links", "Analytics avançado", "QR Codes personalizados"], popular: true },
+                      { name: "Business", price: "R$ 99,90", features: ["Links ilimitados", "Analytics completo", "API acesso"] }
+                    ].map((plan, i) => (
+                      <div key={i} className={`bg-white p-8 rounded-2xl border-2 ${plan.popular ? 'border-indigo-600 shadow-2xl scale-105' : 'border-slate-200'} relative`}>
+                        {plan.popular && (
+                          <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-1 rounded-full text-sm font-bold">
+                            Mais Popular
+                          </div>
+                        )}
+                        <h3 className="text-2xl font-black text-slate-900 mb-2">{plan.name}</h3>
+                        <div className="mb-6">
+                          <span className="text-5xl font-black text-slate-900">{plan.price}</span>
+                          <span className="text-slate-500">/mês</span>
+                        </div>
+                        <ul className="space-y-3 mb-8">
+                          {plan.features.map((feature, j) => (
+                            <li key={j} className="flex items-center gap-2 text-slate-600">
+                              <span className="text-green-500">✓</span> {feature}
+                            </li>
+                          ))}
+                        </ul>
+                        <button
+                          onClick={() => setAuthView('register')}
+                          className={`w-full py-3 rounded-xl font-bold transition-all ${plan.popular
+                              ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-xl'
+                              : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                            }`}
+                        >
+                          {plan.price === "R$ 0,00" ? 'Começar Grátis' : `Assinar ${plan.name}`}
+                        </button>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </div>
@@ -569,7 +606,7 @@ const App: React.FC = () => {
           <div className="flex items-center justify-center gap-3">
             <span>&copy; 2026 12Vai. Encurtador de URLs Brasileiro.</span>
             <span className="px-2 py-1 bg-slate-100 rounded text-xs font-mono text-slate-600">
-              v1.5.0
+              v1.11.0
             </span>
           </div>
         </footer>
