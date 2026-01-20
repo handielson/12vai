@@ -1,7 +1,7 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { Sparkles, AlertCircle, CheckCircle2, Zap, Lock } from 'lucide-react';
+import { Sparkles, AlertCircle, CheckCircle2, Zap, Lock, Copy, Check, ExternalLink, X } from 'lucide-react';
 import { urlService } from '../services/urlService';
 import { User } from '../types';
 import { canCreateUrl, getUrlLimit, formatLimit, canUsePasswordProtection } from '../lib/planLimits';
@@ -17,6 +17,10 @@ const UrlCreator: React.FC<Props> = ({ user, onCreated }) => {
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'error' | 'success'; msg: string } | null>(null);
   const [validation, setValidation] = useState<{ valid: boolean; error?: string; isPremium: boolean } | null>(null);
+
+  // Success modal state
+  const [successModal, setSuccessModal] = useState<{ show: boolean; createdSlug: string }>({ show: false, createdSlug: '' });
+  const [copied, setCopied] = useState(false);
 
   // Password protection states
   const [password, setPassword] = useState('');
@@ -96,7 +100,8 @@ const UrlCreator: React.FC<Props> = ({ user, onCreated }) => {
         password_hint: enablePassword ? passwordHint : null
       });
 
-      setFeedback({ type: 'success', msg: 'Link criado com sucesso! Ele já "vai".' });
+      // Show success modal instead of inline feedback
+      setSuccessModal({ show: true, createdSlug: slug });
       setUrl('');
       setSlug('');
       setPassword('');
@@ -238,6 +243,79 @@ const UrlCreator: React.FC<Props> = ({ user, onCreated }) => {
           {loading ? 'Preparando Link...' : 'Criar Link e "Ir"'}
         </button>
       </div>
+
+      {/* Success Modal */}
+      {successModal.show && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 max-w-md w-full shadow-2xl animate-in zoom-in-95 duration-200">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center">
+                  <CheckCircle2 className="text-emerald-600 dark:text-emerald-400" size={24} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">Link Criado!</h3>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">Pronto para compartilhar</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setSuccessModal({ show: false, createdSlug: '' })}
+                className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-lg transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Created Link */}
+            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-xl p-6 mb-6">
+              <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">Seu link:</p>
+              <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 break-all">
+                12vai.com/{successModal.createdSlug}
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="space-y-3">
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(`https://12vai.com/${successModal.createdSlug}`);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                }}
+                className="w-full px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+              >
+                {copied ? (
+                  <>
+                    <Check size={18} />
+                    Copiado!
+                  </>
+                ) : (
+                  <>
+                    <Copy size={18} />
+                    Copiar Link
+                  </>
+                )}
+              </button>
+
+              <button
+                onClick={() => window.location.href = '/links'}
+                className="w-full px-6 py-3 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+              >
+                <ExternalLink size={18} />
+                Ver Meus Links
+              </button>
+
+              <button
+                onClick={() => setSuccessModal({ show: false, createdSlug: '' })}
+                className="w-full px-6 py-3 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 rounded-xl font-medium transition-all"
+              >
+                Criar Outro Link
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
