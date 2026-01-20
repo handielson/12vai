@@ -346,7 +346,7 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ initialTab }) => {
                     </div>
                     <div className="flex items-center gap-2">
                         <span className="px-2 py-1 bg-slate-100 rounded text-xs font-mono">
-                            v1.10.0
+                            v1.11.0
                         </span>
                     </div>
                 </div>
