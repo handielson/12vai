@@ -150,6 +150,25 @@ VaiEncurta é um encurtador de URLs SaaS desenvolvido com React 19 e Supabase, f
 3. Site bloqueado para visitantes, admin continua acessando
 4. Para desativar: clique em "🔴 Desativar Manutenção" (botão vermelho)
 
+### 🎯 Painel Administrativo (v1.9.0)
+
+- [x] **Navegação por URL** - Acesso direto a abas via URL (`/admin/coupons`, `/admin/users`)
+- [x] **Títulos Dinâmicos** - Título da aba do navegador atualiza automaticamente
+- [x] **Interface Limpa** - Removido elementos duplicados e redundantes
+- [x] **Gestão de Usuários** - Lista completa com filtros e ações
+- [x] **Impersonação** - Admin pode fazer login como qualquer usuário
+- [x] **Auditoria** - Histórico completo de ações administrativas
+
+### ✨ Melhorias de UX (v1.9.0)
+
+- [x] **Modal de Sucesso** - Aparece após criar link com opções de ação
+  - Copiar link (com feedback visual "Copiado!")
+  - Ver todos os links
+  - Criar outro link
+- [x] **Links Corrigidos** - Exibição completa `12vai.com/slug` em vez de `12vai/slug`
+- [x] **Feedback Visual** - Estados de loading e sucesso aprimorados
+- [x] **Animações Suaves** - Transições e modais com animações elegantes
+
 ---
 
 ## 🛠️ Stack Tecnológica
@@ -333,6 +352,26 @@ graph LR
 ## 📝 Changelog
 
 Veja o [CHANGELOG.md](CHANGELOG.md) completo para detalhes de todas as versões.
+
+### v1.9.0 (20/01/2026) - Melhorias Admin e UX
+
+- ✅ **Painel Admin aprimorado**
+  - Navegação por URL (`/admin/users`, `/admin/coupons`, etc.)
+  - Títulos dinâmicos nas abas do navegador
+  - Interface limpa sem elementos duplicados
+  - Lista de usuários totalmente funcional
+- ✅ **Modal de sucesso após criar link**
+  - Exibe link criado em destaque
+  - Botão copiar com feedback visual
+  - Navegação rápida para página de links
+  - Opção de criar outro link
+- ✅ **Correção de exibição de links**
+  - Links mostram domínio completo: `12vai.com/slug`
+  - Função copiar inclui URL completa: `https://12vai.com/slug`
+- ✅ **Melhorias gerais de UX**
+  - Animações suaves em modais
+  - Feedback visual aprimorado
+  - Suporte a dark mode em novos componentes
 
 ### v1.8.0 (19/01/2026) - Proteção por Senha
 
