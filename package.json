@@ -24,6 +24,7 @@
     "@react-email/section": "^0.0.17",
     "@react-email/text": "^0.1.6",
     "@supabase/supabase-js": "^2.90.1",
+    "date-fns": "^4.1.0",
     "lucide-react": "^0.562.0",
     "qr-code-styling": "^1.9.2",
     "qrcode.react": "^4.2.0",

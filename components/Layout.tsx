@@ -15,7 +15,8 @@ import {
   X,
   CreditCard,
   Shield,
-  ExternalLink
+  ExternalLink,
+  MessageSquare
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { urlService } from '../services/urlService';
@@ -113,6 +114,16 @@ const Layout: React.FC<LayoutProps> = ({
             </a>
           </>
         )}
+
+        {/* Link de Suporte/Contato */}
+        <div className="my-2 border-t border-slate-700"></div>
+        <a
+          href="/contato"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 hover:bg-slate-800 hover:text-white text-slate-300"
+        >
+          <MessageSquare size={20} />
+          <span>Suporte</span>
+        </a>
       </nav>
 
       <div className="p-4 border-t border-slate-800">

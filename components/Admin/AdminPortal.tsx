@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, LogOut, Copy, Check, Users, Wrench, Settings, FileText, Clock, BarChart3, ExternalLink, Zap, Tag, Scale, Key, Mail } from 'lucide-react';
+import { Shield, LogOut, Copy, Check, Users, Wrench, Settings, FileText, Clock, BarChart3, ExternalLink, Zap, Tag, Scale, Key, Mail, MessageSquare } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { adminService } from '../../services/adminService';
 import { AdminLogin } from './AdminLogin';
@@ -13,9 +13,10 @@ import AnalyticsPanel from './AnalyticsPanel';
 import CouponManagement from './CouponManagement';
 import { ApiKeysPanel } from './ApiKeysPanel';
 import { EmailTestPanel } from './EmailTestPanel';
+import SupportTicketsPanel from './SupportTicketsPanel';
 
 
-type TabType = 'dashboard' | 'users' | 'maintenance' | 'plans' | 'audit' | 'docs' | 'analytics' | 'coupons' | 'terms' | 'api' | 'email';
+type TabType = 'dashboard' | 'users' | 'maintenance' | 'plans' | 'audit' | 'docs' | 'analytics' | 'coupons' | 'terms' | 'api' | 'email' | 'support';
 
 interface AdminPortalProps {
     initialTab?: string;
@@ -25,7 +26,7 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ initialTab }) => {
     const { user, signOut } = useAuth();
 
     // Validar e definir aba inicial
-    const validTabs: TabType[] = ['dashboard', 'users', 'maintenance', 'plans', 'audit', 'docs', 'analytics', 'coupons', 'terms', 'api', 'email'];
+    const validTabs: TabType[] = ['dashboard', 'users', 'maintenance', 'plans', 'audit', 'docs', 'analytics', 'coupons', 'terms', 'api', 'email', 'support'];
     const getInitialTab = (): TabType => {
         if (initialTab && validTabs.includes(initialTab as TabType)) {
             return initialTab as TabType;
@@ -67,6 +68,7 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ initialTab }) => {
             coupons: 'Cupons',
             api: 'API',
             email: 'Email',
+            support: 'Suporte',
             maintenance: 'Manutenção',
             plans: 'Planos',
             audit: 'Auditoria',
@@ -161,6 +163,7 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ initialTab }) => {
         { id: 'users' as TabType, label: 'Usuários', icon: Users },
         { id: 'analytics' as TabType, label: 'Analytics', icon: BarChart3 },
         { id: 'coupons' as TabType, label: 'Cupons', icon: Tag },
+        { id: 'support' as TabType, label: 'Suporte', icon: MessageSquare },
         { id: 'api' as TabType, label: 'API', icon: Key },
         { id: 'email' as TabType, label: 'Email', icon: Mail },
         { id: 'maintenance' as TabType, label: 'Manutenção', icon: Wrench },
@@ -325,6 +328,7 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ initialTab }) => {
                 {activeTab === 'users' && <AdminDashboard />}
                 {activeTab === 'analytics' && <AnalyticsPanel />}
                 {activeTab === 'coupons' && <CouponManagement />}
+                {activeTab === 'support' && <SupportTicketsPanel />}
                 {activeTab === 'api' && <ApiKeysPanel />}
                 {activeTab === 'email' && <EmailTestPanel />}
                 {activeTab === 'maintenance' && <MaintenanceControl />}

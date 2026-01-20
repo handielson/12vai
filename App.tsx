@@ -17,6 +17,7 @@ import RedirectHandler from './components/RedirectHandler';
 import { WhatsNewModal } from './components/WhatsNewModal';
 import { TermsAcceptanceModal } from './components/TermsAcceptanceModal';
 import MaintenancePage from './components/MaintenancePage';
+import ContactPage from './components/ContactPage';
 import { useAuth } from './contexts/AuthContext';
 import { termsService } from './services/termsService';
 import { Zap, Sparkles } from 'lucide-react';
@@ -148,6 +149,7 @@ const App: React.FC = () => {
     'billing',
     'settings',
     'admin',
+    'contato',
     'login',
     'register',
     'forgot',
@@ -165,6 +167,13 @@ const App: React.FC = () => {
   // Se for uma rota de slug, mostrar o RedirectHandler
   if (isSlugRoute) {
     return <RedirectHandler slug={currentPath} />;
+  }
+
+  // ============================================
+  // ROTA DE CONTATO (PÚBLICA)
+  // ============================================
+  if (currentPath === 'contato') {
+    return <ContactPage />;
   }
 
   // ============================================
