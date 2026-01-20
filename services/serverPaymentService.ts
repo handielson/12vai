@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 
 // Inicializar Stripe com chave secreta (APENAS SERVIDOR)
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-    apiVersion: '2024-12-18.acacia',
+    apiVersion: '2025-02-24.acacia',
 });
 
 // Mapeamento de planos para Price IDs do Stripe
