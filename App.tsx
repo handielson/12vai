@@ -124,12 +124,17 @@ const App: React.FC = () => {
   // Deve acontecer ANTES de qualquer outra verificação
   // ============================================
   const currentPath = window.location.pathname.slice(1);
-  const isAdminRoute = currentPath === 'admin';
+  const isAdminRoute = currentPath === 'admin' || currentPath.startsWith('admin/');
+
+  // Extrair a aba da URL (ex: /admin/cupons -> 'cupons')
+  const adminTab = currentPath.startsWith('admin/')
+    ? currentPath.split('/')[1]
+    : undefined;
 
   // Se for rota admin, renderizar AdminPortal IMEDIATAMENTE
   // Não passa por verificação de manutenção nem loading
   if (isAdminRoute) {
-    return <AdminPortal />;
+    return <AdminPortal initialTab={adminTab} />;
   }
 
   // ============================================

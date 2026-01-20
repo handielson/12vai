@@ -17,9 +17,23 @@ import { EmailTestPanel } from './EmailTestPanel';
 
 type TabType = 'dashboard' | 'users' | 'maintenance' | 'plans' | 'audit' | 'docs' | 'analytics' | 'coupons' | 'terms' | 'api' | 'email';
 
-const AdminPortal: React.FC = () => {
+interface AdminPortalProps {
+    initialTab?: string;
+}
+
+const AdminPortal: React.FC<AdminPortalProps> = ({ initialTab }) => {
     const { user, signOut } = useAuth();
-    const [activeTab, setActiveTab] = useState<TabType>('dashboard');
+
+    // Validar e definir aba inicial
+    const validTabs: TabType[] = ['dashboard', 'users', 'maintenance', 'plans', 'audit', 'docs', 'analytics', 'coupons', 'terms', 'api', 'email'];
+    const getInitialTab = (): TabType => {
+        if (initialTab && validTabs.includes(initialTab as TabType)) {
+            return initialTab as TabType;
+        }
+        return 'dashboard';
+    };
+
+    const [activeTab, setActiveTab] = useState<TabType>(getInitialTab());
     const [isAdmin, setIsAdmin] = useState(false);
     const [loading, setLoading] = useState(true);
     const [linkCopied, setLinkCopied] = useState(false);
@@ -35,6 +49,14 @@ const AdminPortal: React.FC = () => {
             loadStats();
         }
     }, [isAdmin]);
+
+    // Atualizar URL quando a aba mudar
+    useEffect(() => {
+        const newPath = activeTab === 'dashboard' ? '/admin' : `/admin/${activeTab}`;
+        if (window.location.pathname !== newPath) {
+            window.history.pushState({}, '', newPath);
+        }
+    }, [activeTab]);
 
     const checkAdminAccess = async () => {
         // Se não há usuário, mostrar tela de login do admin
