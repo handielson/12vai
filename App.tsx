@@ -486,6 +486,12 @@ const App: React.FC = () => {
                             <span className="text-green-500">✓</span>
                             {plan.url_limit === null ? 'Links ilimitados' : `${plan.url_limit.toLocaleString('pt-BR')} links`}
                           </li>
+                          {/* Proteção por senha (se habilitado) */}
+                          {plan.allow_password_protection && (
+                            <li className="flex items-center gap-2 text-slate-600">
+                              <span className="text-green-500">✓</span> Proteção por senha
+                            </li>
+                          )}
                           {/* Demais features */}
                           {plan.features.map((feature, j) => (
                             <li key={j} className="flex items-center gap-2 text-slate-600">
