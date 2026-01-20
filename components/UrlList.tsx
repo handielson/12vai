@@ -67,7 +67,7 @@ const UrlList: React.FC = () => {
   }, [supabaseUser]);
 
   const handleCopy = (url: string, id: string) => {
-    navigator.clipboard.writeText(`12vai/${url}`);
+    navigator.clipboard.writeText(`https://12vai.com/${url}`);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
@@ -193,7 +193,7 @@ const UrlList: React.FC = () => {
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-3">
                         <div className="flex items-center">
-                          <span className="text-sm font-black text-indigo-600">12vai/{url.short_slug}</span>
+                          <span className="text-sm font-black text-indigo-600">12vai.com/{url.short_slug}</span>
                           {url.is_premium && (
                             <span className="ml-2 p-1 bg-amber-100 text-amber-600 rounded" title="Link Premium">
                               <Sparkles size={12} />
@@ -281,7 +281,7 @@ const UrlList: React.FC = () => {
 
             <div className="bg-slate-50 rounded-xl p-4 mb-6">
               <p className="text-sm text-slate-600 mb-2">Você está prestes a deletar:</p>
-              <p className="text-lg font-bold text-indigo-600">12vai/{deleteModal.url.short_slug}</p>
+              <p className="text-lg font-bold text-indigo-600">12vai.com/{deleteModal.url.short_slug}</p>
               <p className="text-xs text-slate-400 mt-1 truncate">{deleteModal.url.original_url}</p>
             </div>
 
@@ -404,7 +404,7 @@ const UrlList: React.FC = () => {
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <p className="text-sm text-slate-600 mb-1">Link Encurtado:</p>
-                  <p className="text-2xl font-bold text-indigo-600">12vai/{analyticsModal.url.short_slug}</p>
+                  <p className="text-2xl font-bold text-indigo-600">12vai.com/{analyticsModal.url.short_slug}</p>
                 </div>
                 {analyticsModal.url.is_premium && (
                   <span className="px-4 py-2 bg-amber-100 text-amber-700 rounded-full text-sm font-bold flex items-center gap-2">
