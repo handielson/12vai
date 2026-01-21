@@ -12,7 +12,7 @@ import { AuditLogPanel } from './AuditLogPanel';
 import AnalyticsPanel from './AnalyticsPanel';
 import CouponManagement from './CouponManagement';
 import { ApiKeysPanel } from './ApiKeysPanel';
-import { EmailTestPanel } from './EmailTestPanel';
+import { EmailManagementPanel } from './EmailManagementPanel';
 import SupportTicketsPanel from './SupportTicketsPanel';
 
 
@@ -330,7 +330,7 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ initialTab }) => {
                 {activeTab === 'coupons' && <CouponManagement />}
                 {activeTab === 'support' && <SupportTicketsPanel />}
                 {activeTab === 'api' && <ApiKeysPanel />}
-                {activeTab === 'email' && <EmailTestPanel />}
+                {activeTab === 'email' && <EmailManagementPanel />}
                 {activeTab === 'maintenance' && <MaintenanceControl />}
                 {activeTab === 'plans' && <PlanSettingsPanel />}
                 {activeTab === 'audit' && <AuditLogPanel />}

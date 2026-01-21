@@ -640,7 +640,11 @@ const App: React.FC = () => {
     >
       {activeTab === 'dashboard' && (
         <>
-          <UrlCreator user={user!} onCreated={() => { }} />
+          <UrlCreator
+            user={user!}
+            onCreated={() => { }}
+            onUpgradeClick={() => setActiveTab('billing')}
+          />
           <Dashboard />
         </>
       )}
