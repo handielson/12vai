@@ -1,29 +1,9 @@
-import Stripe from 'stripe';
-import { createClient } from '@supabase/supabase-js';
+const Stripe = require('stripe');
+const { createClient } = require('@supabase/supabase-js');
 
-// Inicializar Supabase com Service Role Key (para servidor)
-const supabase = createClient(
-    process.env.VITE_SUPABASE_URL || '',
-    process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-);
-
-// Inicializar Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-    apiVersion: '2024-12-18.acacia',
-});
-
-// Price IDs
-const PRICE_IDS = {
-    pro_monthly: process.env.STRIPE_PRICE_PRO_MONTHLY || '',
-    pro_yearly: process.env.STRIPE_PRICE_PRO_YEARLY || '',
-    business_monthly: process.env.STRIPE_PRICE_BUSINESS_MONTHLY || '',
-    business_yearly: process.env.STRIPE_PRICE_BUSINESS_YEARLY || '',
-};
-
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
     console.log('=== CHECKOUT API CALLED ===');
     console.log('Method:', req.method);
-    console.log('Headers:', JSON.stringify(req.headers));
 
     // Set CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -40,8 +20,26 @@ export default async function handler(req, res) {
     }
 
     try {
+        // Inicializar Supabase com Service Role Key
+        const supabase = createClient(
+            process.env.VITE_SUPABASE_URL || '',
+            process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+        );
+
+        // Inicializar Stripe
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+            apiVersion: '2024-12-18.acacia',
+        });
+
+        // Price IDs
+        const PRICE_IDS = {
+            pro_monthly: process.env.STRIPE_PRICE_PRO_MONTHLY || '',
+            pro_yearly: process.env.STRIPE_PRICE_PRO_YEARLY || '',
+            business_monthly: process.env.STRIPE_PRICE_BUSINESS_MONTHLY || '',
+            business_yearly: process.env.STRIPE_PRICE_BUSINESS_YEARLY || '',
+        };
+
         console.log('Step 1: Checking auth header...');
-        // Autenticação
         const authHeader = req.headers.authorization;
         if (!authHeader) {
             console.log('ERROR: No auth header');
@@ -53,8 +51,11 @@ export default async function handler(req, res) {
         const { data: { user }, error: authError } = await supabase.auth.getUser(token);
 
         if (authError || !user) {
+            console.log('ERROR: Invalid token', authError);
             return res.status(401).json({ error: 'Token inválido' });
         }
+
+        console.log('Step 3: User authenticated:', user.id);
 
         // Validar parâmetros
         const { planName, billingInterval } = req.body;
@@ -67,6 +68,7 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Intervalo de cobrança inválido' });
         }
 
+        console.log('Step 4: Checking existing subscription...');
         // Verificar assinatura ativa
         const { data: existingSubscription } = await supabase
             .from('subscriptions')
@@ -79,6 +81,7 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Usuário já possui uma assinatura ativa' });
         }
 
+        console.log('Step 5: Getting or creating Stripe customer...');
         // Obter ou criar customer Stripe
         let customerId;
         const { data: userData } = await supabase
@@ -105,6 +108,7 @@ export default async function handler(req, res) {
             customerId = customer.id;
         }
 
+        console.log('Step 6: Creating checkout session...');
         // Obter Price ID
         const priceKey = `${planName}_${billingInterval === 'year' ? 'yearly' : 'monthly'}`;
         const priceId = PRICE_IDS[priceKey];
@@ -134,16 +138,17 @@ export default async function handler(req, res) {
             },
         });
 
+        console.log('SUCCESS: Checkout session created:', session.id);
         return res.status(200).json({
             sessionId: session.id,
             url: session.url,
         });
 
     } catch (error) {
-        console.error('Erro ao criar checkout:', error);
+        console.error('ERROR in checkout:', error);
         return res.status(500).json({
             error: 'Erro ao criar sessão de checkout',
             details: error.message
         });
     }
-}
+};
