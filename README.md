@@ -282,6 +282,63 @@ npx vercel --prod
 
 ---
 
+## 🔢 Gerenciamento de Versão
+
+### Sistema Unificado (v1.14.0+)
+
+A partir da versão 1.14.0, o sistema usa **uma única fonte da verdade** para a versão:
+
+**Arquivo Principal:** `package.json`
+
+```json
+{
+  "version": "1.14.0"
+}
+```
+
+**Como Funciona:**
+
+1. `src/version.ts` lê automaticamente do `package.json`:
+   ```typescript
+   import packageJson from '../package.json';
+   export const APP_VERSION = packageJson.version;
+   ```
+
+2. Todos os componentes importam de `src/version.ts`:
+   ```typescript
+   import { APP_VERSION } from '../src/version';
+   ```
+
+3. A versão aparece automaticamente em:
+   - Rodapé do site (usuário)
+   - Rodapé do admin
+   - Sidebar do painel
+   - Modal "O que há de novo"
+
+**Para Atualizar a Versão:**
+
+1. Edite apenas `package.json`:
+   ```json
+   "version": "1.15.0"
+   ```
+
+2. Commit e push:
+   ```bash
+   git add package.json CHANGELOG.md
+   git commit -m "chore: bump version to 1.15.0"
+   git push
+   ```
+
+3. A versão será atualizada automaticamente em todo o sistema após o deploy!
+
+**Arquivos Afetados Automaticamente:**
+- `components/Admin/AdminPortal.tsx` - Footer do admin
+- `components/Layout.tsx` - Sidebar do usuário
+- `App.tsx` - Footer da landing page
+- `components/WhatsNewModal.tsx` - Modal de novidades
+
+---
+
 ## 📚 Documentação Técnica
 
 ### Estrutura do Projeto
@@ -352,6 +409,33 @@ graph LR
 ## 📝 Changelog
 
 Veja o [CHANGELOG.md](CHANGELOG.md) completo para detalhes de todas as versões.
+
+### v1.14.0 (22/01/2026) - Correções Críticas e Otimizações
+
+- 🐛 **Correção da Tela Branca**
+  - Substituído `.single()` por `.maybeSingle()` em 12 locais críticos
+  - Eliminação total de erros PGRST116
+  - Site carrega perfeitamente no primeiro acesso
+- 🐛 **Checkout Funcionando**
+  - Corrigido erro "Erro ao criar sessão de checkout"
+  - Usuários podem assinar planos sem problemas
+- 🐛 **Funções Serverless Corrigidas**
+  - Removido imports externos de funções Vercel
+  - Billing portal 100% operacional
+- 🐛 **Stripe Test/Live Mode**
+  - Limpado customer IDs de teste do banco
+  - Compatibilidade total com Live Mode
+- ⚡ **Performance RLS Otimizada**
+  - 32 políticas RLS otimizadas
+  - Queries muito mais rápidas em tabelas grandes
+  - `auth.uid()` → `(select auth.uid())`
+- 🔒 **Segurança Aprimorada**
+  - 8 funções SQL com `SET search_path = public`
+  - Prevenção de vulnerabilidades de injeção de schema
+- 🔧 **Sistema de Versão Unificado**
+  - Versão agora vem de um único lugar: `package.json`
+  - Atualização automática em todo o sistema
+  - Sem mais versões hardcoded
 
 ### v1.9.0 (20/01/2026) - Melhorias Admin e UX
 
