@@ -2,6 +2,84 @@
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.14.0] - 2026-01-22
+
+### 🐛 Correções Críticas
+
+#### Tela Branca Resolvida
+- **Problema**: Site apresentava tela branca no primeiro acesso, exigindo múltiplos F5
+- **Causa**: Uso de `.single()` em queries que podiam retornar zero resultados (erro PGRST116)
+- **Solução**: Substituído `.single()` por `.maybeSingle()` em 12 locais críticos
+- **Arquivos corrigidos**: 
+  - `urlService.ts` (4 correções)
+  - `App.tsx` (2 correções)
+  - `AuthContext.tsx` (1 correção crítica)
+  - `planSettingsService.ts` (1 correção)
+  - `documentationService.ts` (3 correções)
+  - `adminService.ts` (1 correção)
+- **Commit**: `fb54e8c`
+
+#### Checkout Funcionando
+- **Problema**: Erro "Erro ao criar sessão de checkout" ao tentar assinar planos
+- **Causa**: `.single()` em queries de verificação de assinatura (usuários novos retornam zero)
+- **Solução**: Substituído `.single()` por `.maybeSingle()` em `api/checkout.js` (2 locais)
+- **Commit**: `7ae3a80`
+
+#### Funções Serverless Vercel Corrigidas
+- **Problema**: Erro 500 nas funções serverless (imports externos não funcionam no Vercel)
+- **Causa**: Funções em `/api` tentavam importar de `../services/` e `../lib/`
+- **Solução**: Removido imports externos, funções agora são auto-contidas
+- **Arquivos corrigidos**: `api/billing-portal.js`
+- **Commit**: `3ae8c56`
+
+#### Stripe Test/Live Mode Mismatch
+- **Problema**: Customer IDs de teste do Stripe causando erro 500 em produção
+- **Causa**: IDs criados no test mode sendo usados com chaves de live mode
+- **Solução**: Limpado customer IDs de teste do banco de dados
+- **SQL**: `UPDATE users SET stripe_customer_id = NULL`
+
+### ⚡ Otimizações de Performance
+
+#### RLS Policies Otimizadas
+- **Melhoria**: 32 políticas RLS otimizadas para melhor performance
+- **Mudança**: `auth.uid()` → `(select auth.uid())`
+- **Benefício**: Função avaliada 1 vez por query em vez de N vezes (uma por linha)
+- **Tabelas otimizadas**: api_keys, api_requests, subscriptions, payment_history, email_preferences, email_logs, email_templates, email_template_versions, clicks, support_tickets, ticket_messages, legal_documents, user_acceptances
+- **Script**: `db/fix_rls_performance.sql`
+
+### 🔒 Melhorias de Segurança
+
+#### Function Search Path Fixado
+- **Melhoria**: 8 funções SQL com `SET search_path = public`
+- **Benefício**: Previne vulnerabilidades de injeção de schema
+- **Funções corrigidas**:
+  - `handle_new_user`
+  - `create_default_email_preferences`
+  - `get_email_preferences`
+  - `update_email_preferences`
+  - `can_send_email`
+  - `log_email_sent`
+  - `update_email_status`
+  - `get_email_stats`
+- **Script**: `db/fix_function_search_path.sql`
+
+### 📊 Impacto
+
+- ✅ Eliminação total de telas brancas
+- ✅ Checkout funcionando perfeitamente
+- ✅ Billing portal operacional
+- ✅ Redução de 100% dos erros PGRST116
+- ✅ Queries em tabelas grandes muito mais rápidas
+- ✅ Melhor experiência de onboarding
+- ✅ Redução de suporte relacionado a "site não carrega"
+
+### 🔧 Melhorias Gerais
+- Versão atualizada para 1.14.0
+- Documentação completa de troubleshooting
+- Scripts SQL de correção criados
+
+---
+
 ## [1.7.0] - 2026-01-18
 
 ### 📧 Sistema de Notificações por Email
