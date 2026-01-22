@@ -1,6 +1,7 @@
 
 
 import React, { useState, useEffect } from 'react';
+import { APP_VERSION } from './src/version';
 import Layout from './components/Layout';
 import Dashboard from './components/Dashboard';
 import UrlList from './components/UrlList';
