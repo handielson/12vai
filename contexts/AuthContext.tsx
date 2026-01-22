@@ -48,7 +48,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
         });
 
-        return () => subscription.unsubscribe();
+        // Refresh automático do token a cada 50 minutos (antes de expirar em 60min)
+        const refreshInterval = setInterval(async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                const { error } = await supabase.auth.refreshSession();
+                if (error) {
+                    console.error('Erro ao renovar sessão:', error);
+                    // Se falhar, fazer logout
+                    await supabase.auth.signOut();
+                } else {
+                    console.log('✅ Sessão renovada automaticamente');
+                }
+            }
+        }, 50 * 60 * 1000); // 50 minutos
+
+        return () => {
+            subscription.unsubscribe();
+            clearInterval(refreshInterval);
+        };
     }, []);
 
     const loadUserProfile = async (userId: string) => {
@@ -57,7 +75,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 .from('users')
                 .select('*')
                 .eq('id', userId)
-                .single();
+                .maybeSingle();
 
             if (error) throw error;
 

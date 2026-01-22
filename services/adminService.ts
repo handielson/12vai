@@ -28,7 +28,7 @@ export const adminService = {
             .from('users')
             .select('is_admin')
             .eq('id', userId)
-            .single();
+            .maybeSingle();
 
         if (error) return false;
         return data?.is_admin || false;

@@ -92,7 +92,7 @@ const App: React.FC = () => {
         .from('app_settings')
         .select('value')
         .eq('key', 'maintenance_mode')
-        .single();
+        .maybeSingle();
 
       if (data) {
         setMaintenanceMode(data.value.enabled);
@@ -110,7 +110,7 @@ const App: React.FC = () => {
         .from('users')
         .select('is_admin')
         .eq('id', user!.id)
-        .single();
+        .maybeSingle();
 
       setIsAdmin(data?.is_admin || false);
     } catch (error) {

@@ -29,7 +29,7 @@ export const planSettingsService = {
             .from('plan_settings')
             .select('*')
             .eq('plan_name', planName)
-            .single();
+            .maybeSingle();
 
         if (error) {
             console.error('Error fetching plan settings:', error);

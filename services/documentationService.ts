@@ -17,7 +17,7 @@ export const documentationService = {
             .from('project_documentation')
             .select('content')
             .eq('section', 'features')
-            .single();
+            .maybeSingle();
 
         if (error) {
             console.error('Error fetching features:', error);
@@ -31,7 +31,7 @@ export const documentationService = {
             .from('project_documentation')
             .select('content')
             .eq('section', 'roadmap')
-            .single();
+            .maybeSingle();
 
         if (error) {
             console.error('Error fetching roadmap:', error);
@@ -45,7 +45,7 @@ export const documentationService = {
             .from('project_documentation')
             .select('content')
             .eq('section', 'notes')
-            .single();
+            .maybeSingle();
 
         if (error) {
             console.error('Error fetching notes:', error);

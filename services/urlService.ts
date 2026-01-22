@@ -22,7 +22,7 @@ class UrlService {
       .from('reserved_slugs')
       .select('slug')
       .eq('slug', s)
-      .single();
+      .maybeSingle();
 
     if (reserved) {
       return { valid: false, error: 'Este termo é reservado pelo sistema', isPremium: false };
@@ -33,7 +33,7 @@ class UrlService {
       .from('premium_slugs')
       .select('slug')
       .eq('slug', s)
-      .single();
+      .maybeSingle();
 
     const isPremium = !!premium;
 
@@ -42,7 +42,7 @@ class UrlService {
       .from('urls')
       .select('id')
       .eq('short_slug', s)
-      .single();
+      .maybeSingle();
 
     if (existing) {
       return { valid: false, error: 'Este link já está em uso', isPremium };
@@ -122,7 +122,7 @@ class UrlService {
       .from('premium_slugs')
       .select('slug')
       .eq('slug', slug.toLowerCase())
-      .single();
+      .maybeSingle();
 
     return !!data;
   }
