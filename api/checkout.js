@@ -75,7 +75,7 @@ export default async function handler(req, res) {
             .select('*')
             .eq('user_id', user.id)
             .in('status', ['active', 'trialing'])
-            .single();
+            .maybeSingle();
 
         if (existingSubscription) {
             return res.status(400).json({ error: 'Usuário já possui uma assinatura ativa' });
@@ -88,7 +88,7 @@ export default async function handler(req, res) {
             .from('users')
             .select('stripe_customer_id')
             .eq('id', user.id)
-            .single();
+            .maybeSingle();
 
         if (userData?.stripe_customer_id) {
             customerId = userData.stripe_customer_id;
