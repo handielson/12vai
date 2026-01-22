@@ -5,6 +5,7 @@ import { planSettingsService, type PlanSettings } from '../services/planSettings
 import { useAuth } from '../contexts/AuthContext';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { supabase } from '../lib/supabase';
 
 export function BillingPanel() {
     const { user } = useAuth();
@@ -55,21 +56,30 @@ export function BillingPanel() {
 
     async function handleManageSubscription() {
         try {
-            const session = await fetch('/api/billing-portal', {
+            // Get JWT token from Supabase session
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                alert('Sessão expirada. Faça login novamente.');
+                return;
+            }
+
+            const response = await fetch(`/api/billing-portal`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user?.id}`, // Ajustar para usar token real
+                    'Authorization': `Bearer ${session.access_token}`,
                 },
                 body: JSON.stringify({
                     returnUrl: window.location.href,
                 }),
             });
 
-            const data = await session.json();
+            const data = await response.json();
 
             if (data.url) {
                 window.location.href = data.url;
+            } else {
+                alert('Erro ao abrir portal de gerenciamento');
             }
         } catch (err) {
             console.error('Erro ao abrir portal:', err);
@@ -83,25 +93,21 @@ export function BillingPanel() {
             return;
         }
 
-        // Detectar se está em desenvolvimento (localhost)
-        const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-
-        if (isDevelopment) {
-            const planLabel = planName === 'pro' ? 'Pro' : 'Business';
-            const intervalLabel = billingInterval === 'month' ? 'Mensal' : 'Anual';
-
-            alert(`🚧 Modo de Desenvolvimento\n\nPlano selecionado: ${planLabel} - ${intervalLabel}\n\nAs APIs de pagamento só funcionam em produção (Vercel).\n\nPara testar:\n1. Faça deploy no Vercel\n2. Configure webhooks do Stripe\n3. Use cartão de teste: 4242 4242 4242 4242\n\nDocumentação completa em: docs/PAYMENTS_SETUP.md`);
-            return;
-        }
-
         try {
             setLoading(true);
 
-            const response = await fetch('/api/checkout', {
+            // Get JWT token from Supabase session
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                alert('Sessão expirada. Faça login novamente.');
+                return;
+            }
+
+            const response = await fetch(`/api/checkout`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user.id}`,
+                    'Authorization': `Bearer ${session.access_token}`,
                 },
                 body: JSON.stringify({
                     planName,
@@ -221,23 +227,30 @@ export function BillingPanel() {
                                         ou R$ {(plan.monthly_price * 10).toFixed(2).replace('.', ',')}/ano (economize 17%)
                                     </p>
 
-                                    <div className="space-y-2">
-                                        <button
-                                            onClick={() => handleStartCheckout(plan.plan_name as 'pro' | 'business', 'month')}
-                                            className={`w-full px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition text-sm ${plan.plan_name === 'pro'
-                                                ? 'bg-white text-blue-600'
-                                                : 'bg-white text-purple-600'
-                                                }`}
-                                        >
-                                            Assinar Mensal
-                                        </button>
-                                        <button
-                                            onClick={() => handleStartCheckout(plan.plan_name as 'pro' | 'business', 'year')}
-                                            className="w-full bg-white/20 text-white border border-white/30 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition text-sm"
-                                        >
-                                            Assinar Anual
-                                        </button>
-                                    </div>
+                                    {/* Mostrar badge se for o plano atual */}
+                                    {user?.plan === plan.plan_name ? (
+                                        <div className="bg-green-500/20 border border-green-400 text-green-100 px-4 py-3 rounded-lg text-center font-semibold">
+                                            ✓ Plano Atual
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-2">
+                                            <button
+                                                onClick={() => handleStartCheckout(plan.plan_name as 'pro' | 'business', 'month')}
+                                                className={`w-full px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition text-sm ${plan.plan_name === 'pro'
+                                                    ? 'bg-white text-blue-600'
+                                                    : 'bg-white text-purple-600'
+                                                    }`}
+                                            >
+                                                Assinar Mensal
+                                            </button>
+                                            <button
+                                                onClick={() => handleStartCheckout(plan.plan_name as 'pro' | 'business', 'year')}
+                                                className="w-full bg-white/20 text-white border border-white/30 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition text-sm"
+                                            >
+                                                Assinar Anual
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>
@@ -255,20 +268,26 @@ export function BillingPanel() {
                                 <p className="mt-3 font-bold">R$ 29,90/mês</p>
                                 <p className="text-sm text-blue-200 mb-3">ou R$ 299/ano (economize 17%)</p>
 
-                                <div className="space-y-2">
-                                    <button
-                                        onClick={() => handleStartCheckout('pro', 'month')}
-                                        className="w-full bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition text-sm"
-                                    >
-                                        Assinar Mensal
-                                    </button>
-                                    <button
-                                        onClick={() => handleStartCheckout('pro', 'year')}
-                                        className="w-full bg-white/20 text-white border border-white/30 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition text-sm"
-                                    >
-                                        Assinar Anual
-                                    </button>
-                                </div>
+                                {user?.plan === 'pro' ? (
+                                    <div className="bg-green-500/20 border border-green-400 text-green-100 px-4 py-3 rounded-lg text-center font-semibold">
+                                        ✓ Plano Atual
+                                    </div>
+                                ) : (
+                                    <div className="space-y-2">
+                                        <button
+                                            onClick={() => handleStartCheckout('pro', 'month')}
+                                            className="w-full bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition text-sm"
+                                        >
+                                            Assinar Mensal
+                                        </button>
+                                        <button
+                                            onClick={() => handleStartCheckout('pro', 'year')}
+                                            className="w-full bg-white/20 text-white border border-white/30 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition text-sm"
+                                        >
+                                            Assinar Anual
+                                        </button>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="bg-white/10 backdrop-blur rounded-lg p-4">
@@ -282,20 +301,26 @@ export function BillingPanel() {
                                 <p className="mt-3 font-bold">R$ 79,90/mês</p>
                                 <p className="text-sm text-blue-200 mb-3">ou R$ 799/ano (economize 17%)</p>
 
-                                <div className="space-y-2">
-                                    <button
-                                        onClick={() => handleStartCheckout('business', 'month')}
-                                        className="w-full bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition text-sm"
-                                    >
-                                        Assinar Mensal
-                                    </button>
-                                    <button
-                                        onClick={() => handleStartCheckout('business', 'year')}
-                                        className="w-full bg-white/20 text-white border border-white/30 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition text-sm"
-                                    >
-                                        Assinar Anual
-                                    </button>
-                                </div>
+                                {user?.plan === 'business' || user?.plan === 'negócios' ? (
+                                    <div className="bg-green-500/20 border border-green-400 text-green-100 px-4 py-3 rounded-lg text-center font-semibold">
+                                        ✓ Plano Atual
+                                    </div>
+                                ) : (
+                                    <div className="space-y-2">
+                                        <button
+                                            onClick={() => handleStartCheckout('business', 'month')}
+                                            className="w-full bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition text-sm"
+                                        >
+                                            Assinar Mensal
+                                        </button>
+                                        <button
+                                            onClick={() => handleStartCheckout('business', 'year')}
+                                            className="w-full bg-white/20 text-white border border-white/30 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition text-sm"
+                                        >
+                                            Assinar Anual
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}
