@@ -3,6 +3,7 @@
 
 
 import React, { useState, useEffect } from 'react';
+import { APP_VERSION } from '../src/version';
 import {
   LayoutDashboard,
   Link as LinkIcon,
@@ -176,7 +177,7 @@ const Layout: React.FC<LayoutProps> = ({
           Sair do Painel
         </button>
         <div className="mt-2 text-center text-xs text-slate-600">
-          <span className="px-2 py-1 bg-slate-800 rounded font-mono">v1.11.0</span>
+          <span className="px-2 py-1 bg-slate-800 rounded font-mono">v{APP_VERSION}</span>
         </div>
       </div>
     </div>

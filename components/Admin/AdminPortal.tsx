@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, LogOut, Copy, Check, Users, Wrench, Settings, FileText, Clock, BarChart3, ExternalLink, Zap, Tag, Scale, Key, Mail, MessageSquare } from 'lucide-react';
+import { APP_VERSION } from '../../src/version';
 import { useAuth } from '../../contexts/AuthContext';
 import { adminService } from '../../services/adminService';
 import { AdminLogin } from './AdminLogin';
@@ -346,7 +347,7 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ initialTab }) => {
                     </div>
                     <div className="flex items-center gap-2">
                         <span className="px-2 py-1 bg-slate-100 rounded text-xs font-mono">
-                            v1.11.0
+                            v{APP_VERSION}
                         </span>
                     </div>
                 </div>
