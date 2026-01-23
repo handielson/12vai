@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { Mail, Lock, AlertCircle, CheckCircle2, User } from 'lucide-react';
+import { Mail, Lock, AlertCircle, CheckCircle2, User, CreditCard } from 'lucide-react';
+import { validateCPF, formatCPF, normalizeCPF } from '../../utils/cpfValidation';
 
 interface RegisterFormProps {
     onSwitchToLogin: () => void;
@@ -11,14 +12,54 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [cpf, setCpf] = useState('');
+    const [cpfError, setCpfError] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let value = e.target.value;
+
+        // Remove caracteres não numéricos
+        value = value.replace(/[^\d]/g, '');
+
+        // Limita a 11 dígitos
+        value = value.substring(0, 11);
+
+        // Formata enquanto digita
+        const formatted = formatCPF(value);
+        setCpf(formatted);
+
+        // Valida quando completo
+        if (value.length === 11) {
+            if (!validateCPF(value)) {
+                setCpfError('CPF inválido');
+            } else {
+                setCpfError('');
+            }
+        } else {
+            setCpfError('');
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        setCpfError('');
         setSuccess(false);
+
+        // Validar CPF
+        const normalizedCPF = normalizeCPF(cpf);
+        if (normalizedCPF.length !== 11) {
+            setCpfError('CPF é obrigatório');
+            return;
+        }
+
+        if (!validateCPF(normalizedCPF)) {
+            setCpfError('CPF inválido');
+            return;
+        }
 
         if (password !== confirmPassword) {
             setError('As senhas não coincidem');
@@ -32,15 +73,37 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
 
         setLoading(true);
 
-        const { error } = await signUp(email, password);
+        try {
+            // Validar CPF no backend
+            const cpfResponse = await fetch('http://localhost:3002/api/validate-cpf', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cpf: normalizedCPF }),
+            });
 
-        if (error) {
-            setError(error.message);
-        } else {
-            setSuccess(true);
-            setTimeout(() => {
-                onSwitchToLogin();
-            }, 2000);
+            const cpfData = await cpfResponse.json();
+
+            if (!cpfResponse.ok || !cpfData.canCreateFree) {
+                setCpfError(cpfData.error || 'Este CPF já possui uma conta gratuita');
+                setLoading(false);
+                return;
+            }
+
+            // Criar conta
+            const { error } = await signUp(email, password);
+
+            if (error) {
+                setError(error.message);
+            } else {
+                // Atualizar CPF do usuário
+                // Isso será feito via trigger ou função do Supabase
+                setSuccess(true);
+                setTimeout(() => {
+                    onSwitchToLogin();
+                }, 2000);
+            }
+        } catch (err) {
+            setError('Erro ao validar CPF. Tente novamente.');
         }
 
         setLoading(false);
@@ -81,6 +144,23 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
                         onChange={(e) => setEmail(e.target.value)}
                         className="w-full pl-14 pr-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/10 transition-all"
                     />
+                </div>
+
+                <div className="relative">
+                    <CreditCard className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+                    <input
+                        required
+                        type="text"
+                        placeholder="CPF (000.000.000-00)"
+                        value={cpf}
+                        onChange={handleCpfChange}
+                        maxLength={14}
+                        className={`w-full pl-14 pr-5 py-4 bg-slate-50 border rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/10 transition-all ${cpfError ? 'border-red-300 focus:ring-red-500/10' : 'border-slate-200'
+                            }`}
+                    />
+                    {cpfError && (
+                        <p className="text-sm text-red-600 mt-1 ml-1">{cpfError}</p>
+                    )}
                 </div>
 
                 <div className="relative">

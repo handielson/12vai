@@ -9,9 +9,10 @@ import { canCreateUrl, getUrlLimit, formatLimit, canUsePasswordProtection } from
 interface Props {
   user: User;
   onCreated: () => void;
+  onUpgradeClick?: () => void;
 }
 
-const UrlCreator: React.FC<Props> = ({ user, onCreated }) => {
+const UrlCreator: React.FC<Props> = ({ user, onCreated, onUpgradeClick }) => {
   const [url, setUrl] = useState('');
   const [slug, setSlug] = useState('');
   const [loading, setLoading] = useState(false);
@@ -171,7 +172,7 @@ const UrlCreator: React.FC<Props> = ({ user, onCreated }) => {
           {validation?.isPremium && user.plan !== 'business' && (
             <div className="mt-3 p-3 bg-amber-50 rounded-xl border border-amber-100 text-[11px] text-amber-800 leading-relaxed">
               <strong>Atenção:</strong> Slugs curtos e comerciais como "{slug}" são <strong>Premium</strong>.
-              Eles aumentam a confiança do clique em 40%. <button className="underline font-bold">Faça upgrade para Business</button>.
+              Eles aumentam a confiança do clique em 40%. <button onClick={onUpgradeClick} className="underline font-bold hover:text-amber-900 transition-colors">Faça upgrade para Business</button>.
             </div>
           )}
         </div>
@@ -222,7 +223,7 @@ const UrlCreator: React.FC<Props> = ({ user, onCreated }) => {
           ) : (
             <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-200 dark:border-amber-800 text-xs text-amber-800 dark:text-amber-300">
               🔒 <strong>Proteção por senha</strong> disponível no Plano Pro.
-              <button className="underline font-bold ml-1">Fazer upgrade</button>
+              <button onClick={onUpgradeClick} className="underline font-bold ml-1 hover:text-amber-900 dark:hover:text-amber-100 transition-colors">Fazer upgrade</button>
             </div>
           )}
         </div>
