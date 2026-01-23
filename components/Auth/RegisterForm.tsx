@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Mail, Lock, AlertCircle, CheckCircle2, User, CreditCard } from 'lucide-react';
-import { validateCPF, formatCPF, normalizeCPF } from '../../utils/cpfValidation.tsx';
+import { validateCPF, formatCPF, normalizeCPF } from '../../utils/cpfValidation';
 
 interface RegisterFormProps {
     onSwitchToLogin: () => void;
