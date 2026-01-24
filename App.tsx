@@ -252,6 +252,13 @@ const App: React.FC = () => {
 
           {/* Links de autenticação no canto direito */}
           <div className="flex items-center gap-4">
+            <a
+              href="/contato"
+              className="text-slate-700 hover:text-indigo-600 font-semibold transition-colors"
+            >
+              Contato
+            </a>
+            <span className="text-slate-300">|</span>
             <button
               onClick={() => {
                 setAuthView('login');
