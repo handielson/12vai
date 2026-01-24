@@ -1,0 +1,11 @@
+# Permitir todos os bots
+User-agent: *
+Allow: /
+
+# Bloquear áreas privadas
+Disallow: /admin
+Disallow: /api/
+Disallow: /dashboard
+
+# Sitemap
+Sitemap: https://12vai.com/sitemap.xml
