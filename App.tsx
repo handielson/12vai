@@ -601,16 +601,17 @@ const App: React.FC = () => {
                   {
                     q: "Vocês têm suporte em português?",
                     a: "Sim! Somos 100% brasileiros e todo nosso suporte é em português."
-                  }
-                {(landingSettings?.faq || []).map((faq, i) => (
-                    <details key={i} className="bg-slate-50 p-6 rounded-xl border border-slate-200 group">
-                      <summary className="font-bold text-slate-900 cursor-pointer list-none flex items-center justify-between">
-                        {faq.q}
-                        <span className="text-indigo-600 group-open:rotate-180 transition-transform">▼</span>
-                      </summary>
-                      <p className="mt-4 text-slate-600 leading-relaxed">{faq.a}</p>
-                    </details>
-                  ))}
+                  },
+                  ...(landingSettings?.faq || [])
+                ].map((faq, i) => (
+                  <details key={i} className="bg-slate-50 p-6 rounded-xl border border-slate-200 group">
+                    <summary className="font-bold text-slate-900 cursor-pointer list-none flex items-center justify-between">
+                      {faq.q}
+                      <span className="text-indigo-600 group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <p className="mt-4 text-slate-600 leading-relaxed">{faq.a}</p>
+                  </details>
+                ))}
               </div>
             </div>
           </div>
