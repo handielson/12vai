@@ -5,6 +5,9 @@ interface CompanySettings {
     company_name: string;
     logo_url: string | null;
     favicon_url: string | null;
+    instagram_url: string | null;
+    facebook_url: string | null;
+    youtube_url: string | null;
 }
 
 export const useCompanySettings = () => {
