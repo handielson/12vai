@@ -22,6 +22,7 @@ import ContactPage from './components/ContactPage';
 import { useAuth } from './contexts/AuthContext';
 import { termsService } from './services/termsService';
 import { planSettingsService, PlanSettings } from './services/planSettingsService';
+import { landingPageService, LandingPageSettings } from './services/landingPageService';
 import { useCompanySettings } from './hooks/useCompanySettings';
 import { Zap, Sparkles } from 'lucide-react';
 import { supabase } from './lib/supabase';
@@ -37,6 +38,7 @@ const App: React.FC = () => {
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [planSettings, setPlanSettings] = useState<PlanSettings[]>([]);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [landingSettings, setLandingSettings] = useState<LandingPageSettings | null>(null);
 
   // Carregar configurações da empresa (favicon, logo, etc)
   useCompanySettings();
@@ -90,6 +92,27 @@ const App: React.FC = () => {
       }
     };
     loadPlanSettings();
+  }, []);
+
+  // Carregar configurações da landing page
+  useEffect(() => {
+    const loadLandingSettings = async () => {
+      try {
+        const settings = await landingPageService.getLandingPageSettings();
+        if (settings) {
+          console.log('🎨 Landing page settings carregadas:', settings);
+          setLandingSettings(settings);
+        } else {
+          // Use defaults if no settings exist
+          console.log('🎨 Usando configurações padrão da landing page');
+          setLandingSettings(landingPageService.getDefaultSettings());
+        }
+      } catch (error) {
+        console.error('Erro ao carregar landing page settings:', error);
+        setLandingSettings(landingPageService.getDefaultSettings());
+      }
+    };
+    loadLandingSettings();
   }, []);
 
   const checkMaintenanceMode = async () => {
@@ -305,25 +328,25 @@ const App: React.FC = () => {
         )}
 
         {/* Landing Page Content */}
-        <div className="flex-1">
+        <div className="flex-1" id="main-content">
           {/* Hero Section */}
           <div className="max-w-7xl mx-auto px-6 py-20 text-center">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-full text-sm font-bold text-indigo-700 mb-8 animate-pulse">
-              ⚡ Mais de 10.000 links encurtados
+              {landingSettings?.hero_badge_text || '⚡ Mais de 10.000 links encurtados'}
             </div>
 
             {/* Headline */}
             <h1 className="text-5xl md:text-7xl font-black text-slate-900 leading-tight mb-6 tracking-tight">
-              Transforme Links em
+              {landingSettings?.hero_title || 'Transforme Links em'}
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600">
-                Vendas Reais
+                {landingSettings?.hero_title_gradient || 'Vendas Reais'}
               </span>
             </h1>
 
             {/* Subheadline */}
             <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto mb-12 leading-relaxed">
-              O encurtador brasileiro que <strong>aumenta suas conversões</strong> com links profissionais, analytics poderoso e QR Codes personalizados.
+              {landingSettings?.hero_subtitle || 'O encurtador brasileiro que aumenta suas conversões com links profissionais, analytics poderoso e QR Codes personalizados.'}
             </p>
 
             {/* CTA Principal */}
@@ -381,38 +404,7 @@ const App: React.FC = () => {
               </div>
 
               <div className="grid md:grid-cols-3 gap-8">
-                {[
-                  {
-                    icon: "🎯",
-                    title: "Links Personalizados",
-                    desc: "Crie links memoráveis como 12vai.com/oferta que seus clientes confiam e clicam mais"
-                  },
-                  {
-                    icon: "📊",
-                    title: "Analytics em Tempo Real",
-                    desc: "Saiba exatamente quantos cliques, de onde vieram e qual campanha converte melhor"
-                  },
-                  {
-                    icon: "📱",
-                    title: "QR Codes Personalizados",
-                    desc: "Gere QR Codes com sua marca, cores e logo para materiais físicos e digitais"
-                  },
-                  {
-                    icon: "🔒",
-                    title: "Links Protegidos",
-                    desc: "Adicione senha aos seus links para conteúdo exclusivo e lançamentos VIP"
-                  },
-                  {
-                    icon: "⚡",
-                    title: "Redirecionamento Rápido",
-                    desc: "Infraestrutura de alta performance que carrega em menos de 100ms"
-                  },
-                  {
-                    icon: "🎨",
-                    title: "Bio Link Profissional",
-                    desc: "Centralize todos seus links em uma página bonita para Instagram e TikTok"
-                  }
-                ].map((feature, i) => (
+                {(landingSettings?.features || []).map((feature, i) => (
                   <div key={i} className="bg-white p-8 rounded-2xl border border-slate-200 hover:border-indigo-300 hover:shadow-xl transition-all group">
                     <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">{feature.icon}</div>
                     <h3 className="text-xl font-bold text-slate-900 mb-3">{feature.title}</h3>
@@ -427,12 +419,7 @@ const App: React.FC = () => {
           <div className="bg-gradient-to-r from-indigo-600 to-purple-600 py-16">
             <div className="max-w-7xl mx-auto px-6">
               <div className="grid md:grid-cols-4 gap-8 text-center text-white">
-                {[
-                  { number: "10K+", label: "Links Criados" },
-                  { number: "500+", label: "Usuários Ativos" },
-                  { number: "99.9%", label: "Uptime" },
-                  { number: "<100ms", label: "Velocidade" }
-                ].map((stat, i) => (
+                {(landingSettings?.stats || []).map((stat, i) => (
                   <div key={i}>
                     <div className="text-5xl font-black mb-2">{stat.number}</div>
                     <div className="text-indigo-100 font-medium">{stat.label}</div>
@@ -455,26 +442,7 @@ const App: React.FC = () => {
               </div>
 
               <div className="grid md:grid-cols-3 gap-8">
-                {[
-                  {
-                    name: "Maria Silva",
-                    role: "Afiliada Digital",
-                    text: "Meus cliques aumentaram 40% depois que comecei a usar links personalizados. O analytics me ajuda a saber exatamente qual campanha funciona!",
-                    rating: 5
-                  },
-                  {
-                    name: "João Santos",
-                    role: "E-commerce",
-                    text: "O QR Code personalizado ficou perfeito nas embalagens. Agora consigo rastrear quantos clientes escaneiam e compram novamente.",
-                    rating: 5
-                  },
-                  {
-                    name: "Ana Costa",
-                    role: "Influenciadora",
-                    text: "Uso o 12Vai para todos meus links do Instagram. É rápido, profissional e meus seguidores confiam mais nos links curtos.",
-                    rating: 5
-                  }
-                ].map((testimonial, i) => (
+                {(landingSettings?.testimonials || []).map((testimonial, i) => (
                   <div key={i} className="bg-slate-50 p-8 rounded-2xl border border-slate-200">
                     <div className="flex gap-1 mb-4">
                       {[...Array(testimonial.rating)].map((_, j) => (
@@ -634,15 +602,15 @@ const App: React.FC = () => {
                     q: "Vocês têm suporte em português?",
                     a: "Sim! Somos 100% brasileiros e todo nosso suporte é em português."
                   }
-                ].map((faq, i) => (
-                  <details key={i} className="bg-slate-50 p-6 rounded-xl border border-slate-200 group">
-                    <summary className="font-bold text-slate-900 cursor-pointer list-none flex items-center justify-between">
-                      {faq.q}
-                      <span className="text-indigo-600 group-open:rotate-180 transition-transform">▼</span>
-                    </summary>
-                    <p className="mt-4 text-slate-600 leading-relaxed">{faq.a}</p>
-                  </details>
-                ))}
+                {(landingSettings?.faq || []).map((faq, i) => (
+                    <details key={i} className="bg-slate-50 p-6 rounded-xl border border-slate-200 group">
+                      <summary className="font-bold text-slate-900 cursor-pointer list-none flex items-center justify-between">
+                        {faq.q}
+                        <span className="text-indigo-600 group-open:rotate-180 transition-transform">▼</span>
+                      </summary>
+                      <p className="mt-4 text-slate-600 leading-relaxed">{faq.a}</p>
+                    </details>
+                  ))}
               </div>
             </div>
           </div>
@@ -651,10 +619,10 @@ const App: React.FC = () => {
           <div className="bg-gradient-to-r from-indigo-600 to-purple-600 py-20">
             <div className="max-w-4xl mx-auto px-6 text-center">
               <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
-                Pronto para transformar seus links em vendas?
+                {landingSettings?.final_cta_title || 'Pronto para transformar seus links em vendas?'}
               </h2>
               <p className="text-xl text-indigo-100 mb-8">
-                Junte-se a centenas de empreendedores que já aumentaram suas conversões
+                {landingSettings?.final_cta_subtitle || 'Junte-se a centenas de empreendedores que já aumentaram suas conversões'}
               </p>
               <button
                 onClick={() => {

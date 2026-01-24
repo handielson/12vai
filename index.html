@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
   <meta charset="UTF-8" />
@@ -43,6 +43,24 @@
   <style>
     body {
       font-family: 'Inter', sans-serif;
+    }
+
+    /* Skip to content link for accessibility */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: #4f46e5;
+      color: white;
+      padding: 8px 16px;
+      text-decoration: none;
+      z-index: 100;
+      border-radius: 0 0 4px 0;
+      font-weight: 600;
+    }
+
+    .skip-link:focus {
+      top: 0;
     }
   </style>
 
@@ -93,6 +111,7 @@
 </head>
 
 <body class="bg-slate-50 text-slate-900">
+  <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
   <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>
