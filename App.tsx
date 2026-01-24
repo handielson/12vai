@@ -534,7 +534,7 @@ const App: React.FC = () => {
                 }) : (
                   // Fallback enquanto carrega
                   [
-                    { name: "Free", price: "R$ 0,00", features: ["100 links", "Analytics básico", "QR Codes simples"] },
+                    { name: "Free", price: "R$ 0,00", features: ["10 links", "Analytics básico", "QR Codes simples"] },
                     { name: "Pro", price: "R$ 29,90", features: ["1.000 links", "Analytics avançado", "QR Codes personalizados"], popular: true },
                     { name: "Business", price: "R$ 99,90", features: ["Links ilimitados", "Analytics completo", "API acesso"] }
                   ].map((plan, i) => (
@@ -588,7 +588,7 @@ const App: React.FC = () => {
                 {[
                   {
                     q: "Preciso de cartão de crédito para começar?",
-                    a: "Não! O plano Free é 100% gratuito e não requer cartão de crédito. Você pode criar até 100 links sem pagar nada."
+                    a: "Não! O plano Free é 100% gratuito e não requer cartão de crédito. Você pode criar até 10 links sem pagar nada."
                   },
                   {
                     q: "Posso cancelar a qualquer momento?",

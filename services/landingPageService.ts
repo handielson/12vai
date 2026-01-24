@@ -184,7 +184,7 @@ class LandingPageService {
             faq: [
                 {
                     q: 'Preciso de cartão de crédito para começar?',
-                    a: 'Não! O plano Free é 100% gratuito e não requer cartão de crédito. Você pode criar até 100 links sem pagar nada.',
+                    a: 'Não! O plano Free é 100% gratuito e não requer cartão de crédito. Você pode criar até 10 links sem pagar nada.',
                 },
                 {
                     q: 'Posso cancelar a qualquer momento?',
